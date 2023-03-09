@@ -1,3 +1,4 @@
+import 'package:ctse_app/screens/register.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
@@ -126,7 +127,7 @@ class _EmailSigninState extends State<EmailSignin> {
                     style: TextStyle(fontSize: 14),
                   ),
                   onPressed: () async {
-                    // Navigator.push(context, MaterialPageRoute(builder: (_)=> const Register()));
+                    Navigator.push(context, MaterialPageRoute(builder: (_)=> const Register()));
                   },
                 )
               ],
