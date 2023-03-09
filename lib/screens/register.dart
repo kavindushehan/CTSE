@@ -58,12 +58,12 @@ class Register extends StatelessWidget {
                         TextFormField(
                           controller: fullName,
                           decoration: const InputDecoration(
-                            hintText: 'What is your full name?',
-                            labelText: 'Full Name *',
+                            hintText: 'What is your first name?',
+                            labelText: 'First Name *',
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Enter Your Full Name';
+                              return 'Enter Your First Name';
                             }
                             if (!value.isValidName()) {
                               return 'Name should not contain any numbers';
@@ -72,30 +72,17 @@ class Register extends StatelessWidget {
                           },
                         ),
                         TextFormField(
-                          controller: nic,
+                          controller: fullName,
                           decoration: const InputDecoration(
-                            hintText: 'What is your NIC Number?',
-                            labelText: 'NIC *',
+                            hintText: 'What is your last name?',
+                            labelText: 'Last Name *',
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Enter Your NIC';
+                              return 'Enter Your Last Name';
                             }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          controller: contactNo,
-                          decoration: const InputDecoration(
-                            hintText: 'What is your mobile number?',
-                            labelText: 'Contact No *',
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Enter a number';
-                            }
-                            if (!value.isValidNumber()) {
-                              return 'Phone Number should be a number';
+                            if (!value.isValidName()) {
+                              return 'Name should not contain any numbers';
                             }
                             return null;
                           },
@@ -152,7 +139,7 @@ class Register extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                minimumSize: Size.fromHeight(
+                                minimumSize: const Size.fromHeight(
                                     40), // fromHeight use double.infinity as width and 40 is the height
                               ),
                               child: const Text('Login'),
