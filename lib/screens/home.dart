@@ -1,4 +1,4 @@
-import 'package:ctse_app/screens/login.dart';
+import 'package:ctse_app/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -34,7 +34,30 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Titile'),
       ),
-      body: Container(
+      body: Column(
+        children: <Widget>[
+          Container(
+          height: 70,
+          padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size.fromHeight(
+                  40), // fromHeight use double.infinity as width and 40 is the height
+            ),
+            child: const Text('Profile'),
+            onPressed: () async {
+              dynamic result = await auth.signOut();
+              print(result);
+              if (result == 'Success') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Successfully Signed Out'),
+                ));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => EmailSignin()));
+              }
+            },
+          )),
+          Container(
           height: 70,
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
           child: ElevatedButton(
@@ -54,7 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     context, MaterialPageRoute(builder: (_) => EmailSignin()));
               }
             },
-          )),
+          ))
+        ],
+      ),
     );
   }
 }

@@ -1,9 +1,9 @@
-import 'package:ctse_app/screens/login.dart';
+import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../services/auth.dart';
-import 'home.dart';
+import '../../../services/auth.dart';
+import '../home.dart';
 
 void main() {
   runApp(const Register());
@@ -141,7 +141,7 @@ class Register extends StatelessWidget {
                                 minimumSize: const Size.fromHeight(
                                     40), // fromHeight use double.infinity as width and 40 is the height
                               ),
-                              child: const Text('Login'),
+                              child: const Text('Register'),
                               onPressed: () async {
                                 if (registrationFormUser.currentState!.validate()) {
 
@@ -155,7 +155,7 @@ class Register extends StatelessWidget {
                                           Navigator.push(context, MaterialPageRoute(builder: (_)=> const EmailSignin()));
                                         }else{
                                           ScaffoldMessenger.of(context).showSnackBar(
-                                              new SnackBar(content: new Text(result),
+                                              SnackBar(content: Text(result),
                                               ));
                                         }
                                       }
