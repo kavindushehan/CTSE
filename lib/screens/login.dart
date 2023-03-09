@@ -1,4 +1,4 @@
-// import 'package:ctse_app/services/validators.dart';
+import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
 class EmailSignin extends StatefulWidget {
@@ -75,9 +75,9 @@ class _EmailSigninState extends State<EmailSignin> {
                             if (value == null || value.isEmpty) {
                               return 'Enter an email';
                             }
-                            // if (!value.isValidEmail()) {
-                            //   return 'Enter Valid Email';
-                            // }
+                            if (!value.isValidEmail()) {
+                              return 'Enter Valid Email';
+                            }
                             return null;
                           },
                         ),
