@@ -1,4 +1,5 @@
 
+import 'package:ctse_app/screens/auth/register.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
