@@ -1,7 +1,9 @@
+import 'package:ctse_app/screens/login.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth.dart';
+import 'home.dart';
 
 void main() {
   runApp(const Register());
@@ -12,15 +14,12 @@ class Register extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final AuthService auth = AuthService();
 
-    final registrationFormKeyLocal = GlobalKey<FormState>();
-    final registrationFormKeyForeign = GlobalKey<FormState>();
-
-    final TextEditingController fullName = TextEditingController();
-    final TextEditingController nic = TextEditingController();
-    final TextEditingController passportNo = TextEditingController();
-    final TextEditingController contactNo = TextEditingController();
+    final registrationFormUser = GlobalKey<FormState>();
+    final TextEditingController firstName = TextEditingController();
+    final TextEditingController lastName = TextEditingController();
     final TextEditingController email = TextEditingController();
     final TextEditingController pass = TextEditingController();
     final TextEditingController confirmPass = TextEditingController();
@@ -30,7 +29,7 @@ class Register extends StatelessWidget {
         length: 2,
         child: Scaffold(
           body: Form(
-              key: registrationFormKeyLocal,
+              key: registrationFormUser,
               autovalidateMode: AutovalidateMode.always,
               onChanged: () {
                 Form.of(primaryFocus!.context!).save();
@@ -56,7 +55,7 @@ class Register extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextFormField(
-                          controller: fullName,
+                          controller: firstName,
                           decoration: const InputDecoration(
                             hintText: 'What is your first name?',
                             labelText: 'First Name *',
@@ -72,7 +71,7 @@ class Register extends StatelessWidget {
                           },
                         ),
                         TextFormField(
-                          controller: fullName,
+                          controller: lastName,
                           decoration: const InputDecoration(
                             hintText: 'What is your last name?',
                             labelText: 'Last Name *',
@@ -144,13 +143,22 @@ class Register extends StatelessWidget {
                               ),
                               child: const Text('Login'),
                               onPressed: () async {
-                                // dynamic result = await _auth.signInEmail(emailController.text, passwordController.text);
-                                // if(result=='Success'){
-                                //   print('done');
-                                //   Navigator.push(context, MaterialPageRoute(builder: (_)=> Home()));
-                                // }else{
-                                //   print(result);
-                                // }
+                                if (registrationFormUser.currentState!.validate()) {
+
+                                        dynamic result = await auth.registerUser(firstName.text,lastName.text,email.text, pass.text);
+                                        print(result);
+                                        if(result=='Success'){
+                                          print('Successfully Created Account');
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(content: Text('Successfully Created Account'),
+                                              ));
+                                          Navigator.push(context, MaterialPageRoute(builder: (_)=> const EmailSignin()));
+                                        }else{
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                              new SnackBar(content: new Text(result),
+                                              ));
+                                        }
+                                      }
                               },
                             )),
                       ],

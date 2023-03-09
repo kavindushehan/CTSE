@@ -1,6 +1,5 @@
 import 'package:ctse_app/screens/home.dart';
 import 'package:ctse_app/screens/login.dart';
-import 'package:ctse_app/screens/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,17 +12,17 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    // final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
 
-    // final user = auth.currentUser;
-    // print(user);
-    // if(user!=null){
+    final user = auth.currentUser;
+    print(user);
+    if(user!=null){
 
-      return const EmailSignin();
-    // }
-    // else{
-      // return  const EmailSignin();
-    // }
+      return const Home();
+    }
+    else{
+      return  const EmailSignin();
+    }
 
   }
 }

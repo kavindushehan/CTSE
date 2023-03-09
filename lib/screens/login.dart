@@ -2,6 +2,9 @@ import 'package:ctse_app/screens/register.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
+import '../services/auth.dart';
+import 'home.dart';
+
 class EmailSignin extends StatefulWidget {
   const EmailSignin({Key? key}) : super(key: key);
 
@@ -11,11 +14,11 @@ class EmailSignin extends StatefulWidget {
 
 class _EmailSigninState extends State<EmailSignin> {
   bool isLoading = false;
-  // final AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
   final _signInFormKey = GlobalKey<FormState>();
 
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _pass = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController pass = TextEditingController();
 
   @override
   Widget build(BuildContext context) => isLoading
@@ -67,7 +70,7 @@ class _EmailSigninState extends State<EmailSignin> {
                         ),
 
                         TextFormField(
-                          controller: _email,
+                          controller: email,
                           decoration: const InputDecoration(
                             hintText: 'What is your email',
                             labelText: 'Email *',
@@ -83,7 +86,7 @@ class _EmailSigninState extends State<EmailSignin> {
                           },
                         ),
                         TextFormField(
-                          controller: _pass,
+                          controller: pass,
                           obscureText: true,
                           decoration: const InputDecoration(
                             hintText: 'Enter a Strong Password',
@@ -107,13 +110,24 @@ class _EmailSigninState extends State<EmailSignin> {
                               ),
                               child: const Text('Login'),
                               onPressed: () async {
-                                // dynamic result = await _auth.signInEmail(emailController.text, passwordController.text);
-                                // if(result=='Success'){
-                                //   print('done');
-                                //   Navigator.push(context, MaterialPageRoute(builder: (_)=> Home()));
-                                // }else{
-                                //   print(result);
-                                // }
+                                dynamic result = await _auth.signInEmail(email.text, pass.text);
+                                if(result=='Success'){
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Successfully Signed In'),
+                                  ));
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.push(context, MaterialPageRoute(builder: (_)=> const Home()));
+                            }else{
+                              setState(() {
+                                isLoading = false;
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  new SnackBar(content: new Text(result),
+                                  ));
+                            }
                               },
                             )),
                             SizedBox(height: 20,),
@@ -123,7 +137,7 @@ class _EmailSigninState extends State<EmailSignin> {
                 const Text('Does not have account?'),
                 TextButton(
                   child: const Text(
-                    'Sign Up',
+                    'Register',
                     style: TextStyle(fontSize: 14),
                   ),
                   onPressed: () async {
