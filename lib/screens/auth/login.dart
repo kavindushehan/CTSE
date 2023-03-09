@@ -13,6 +13,7 @@ class EmailSignin extends StatefulWidget {
 }
 
 class _EmailSigninState extends State<EmailSignin> {
+  
   bool isLoading = false;
   final AuthService _auth = AuthService();
   final _signInFormKey = GlobalKey<FormState>();
@@ -110,6 +111,9 @@ class _EmailSigninState extends State<EmailSignin> {
                               ),
                               child: const Text('Login'),
                               onPressed: () async {
+                                setState(() {
+                                isLoading = true;
+                              });
                                 dynamic result = await _auth.signInEmail(email.text, pass.text);
                                 if(result=='Success'){
                               ScaffoldMessenger.of(context).showSnackBar(
