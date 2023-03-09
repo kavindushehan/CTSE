@@ -1,21 +1,23 @@
-import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/services/validators.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../services/auth.dart';
-import '../home.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 
-void main() {
-  runApp(const Register());
-}
+import '../../services/auth.dart';
+import 'login.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
   const Register({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
 
     final AuthService auth = AuthService();
+
+    bool isLoading = false;
 
     final registrationFormUser = GlobalKey<FormState>();
     final TextEditingController firstName = TextEditingController();
@@ -24,10 +26,10 @@ class Register extends StatelessWidget {
     final TextEditingController pass = TextEditingController();
     final TextEditingController confirmPass = TextEditingController();
 
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
+@override
+  Widget build(BuildContext context) => isLoading
+      ? const LoadingPage()
+      : Scaffold(
           body: Form(
               key: registrationFormUser,
               autovalidateMode: AutovalidateMode.always,
@@ -143,6 +145,7 @@ class Register extends StatelessWidget {
                               ),
                               child: const Text('Register'),
                               onPressed: () async {
+                              
                                 if (registrationFormUser.currentState!.validate()) {
 
                                         dynamic result = await auth.registerUser(firstName.text,lastName.text,email.text, pass.text);
@@ -166,6 +169,20 @@ class Register extends StatelessWidget {
                   )
                 ],
               )),
+        );
+}
+
+
+class LoadingPage extends StatelessWidget {
+  const LoadingPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      // backgroundColor: ,
+      body: Center(
+        child: CircularProgressIndicator(
+          color: Colors.blueAccent,
         ),
       ),
     );
