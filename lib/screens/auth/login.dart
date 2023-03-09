@@ -1,9 +1,9 @@
-import 'package:ctse_app/screens/register.dart';
+import 'package:ctse_app/screens/auth/register.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
-import '../services/auth.dart';
-import 'home.dart';
+import '../../services/auth.dart';
+import '../home.dart';
 
 class EmailSignin extends StatefulWidget {
   const EmailSignin({Key? key}) : super(key: key);
@@ -57,7 +57,7 @@ class _EmailSigninState extends State<EmailSignin> {
                               child: Image(
                                 width: 250,
                                 height: 250,
-                                image: AssetImage('assets/dashboard.png'),
+                                image: AssetImage('dashboard.png'),
                               ),
                             ),
                             TextFormField(
@@ -101,6 +101,9 @@ class _EmailSigninState extends State<EmailSignin> {
                                   ),
                                   child: const Text('Login'),
                                   onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
                                     dynamic result = await _auth.signInEmail(
                                         email.text, pass.text);
                                     if (result == 'Success') {

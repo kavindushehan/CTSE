@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ctse_app/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -8,17 +9,21 @@ class AuthService {
   Future registerUser(firstName,lastName,email,password) async {
     try {
 
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserModel userModel = UserModel();
+
+      userModel.firstName = firstName;
+      userModel.lastName = lastName;
+      userModel.email = email;
+
+
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      ).then((userCredential){userModel.uid = userCredential.user?.uid;});
 
-      await _fireStore.collection('userData').doc(userCredential.user?.uid).set({
-        'uid' : userCredential.user?.uid,
-        'firstName' : firstName,
-        'lastName' : lastName,
-        'email' : email
-      });
+      
+
+      await _fireStore.collection('userData').doc(userModel.uid).set(userModel.toMap());
 
       await _auth.signOut();
 
