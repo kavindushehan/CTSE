@@ -33,7 +33,7 @@ class Register extends StatelessWidget {
               key: registrationFormKeyLocal,
               autovalidateMode: AutovalidateMode.always,
               onChanged: () {
-                Form.of(primaryFocus!.context!)!.save();
+                Form.of(primaryFocus!.context!).save();
               },
               child: Wrap(
                 children: <Widget>[
