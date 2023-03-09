@@ -1,8 +1,5 @@
 import 'package:ctse_app/screens/login.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
 import '../services/auth.dart';
 
 class Home extends StatelessWidget {
@@ -32,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Titile'),
+        title: Text('Todo App'),
       ),
       body: Container(
           height: 70,
