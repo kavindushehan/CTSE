@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/model/user.dart';
+import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/services/auth.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -140,7 +141,7 @@ class _MyProfileState extends State<MyProfile> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20, 0.0, 20, 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -214,7 +215,8 @@ class _MyProfileState extends State<MyProfile> {
                               isLoading = false;
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: new Text(result),backgroundColor: Colors.blue,
+                              content: new Text(result),
+                              backgroundColor: Colors.blue,
                             ));
                           } else {
                             setState(() {
@@ -227,6 +229,62 @@ class _MyProfileState extends State<MyProfile> {
                           setState(() {
                             isLoading = false;
                           });
+                        },
+                      )),
+                  Container(
+                      height: 50,
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          minimumSize: const Size.fromHeight(
+                              40), // fromHeight use double.infinity as width and 40 is the height
+                        ),
+                        child: const Text('Delete Account'),
+                        onPressed: () async {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext contextF) => AlertDialog(
+                              title: const Text('Delete Account'),
+                              content: const Text(
+                                  'If you delete this account, you will be lost your entered data and this account cannot be recovered again'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(contextF, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    Navigator.pop(contextF, 'OK');
+                                    dynamic result = await _auth.deleteUser();
+                                    print(result);
+                                    if (result == 'Success') {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => EmailSignin()));
+                                    } else {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      print('Error');
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                         },
                       )),
                 ],

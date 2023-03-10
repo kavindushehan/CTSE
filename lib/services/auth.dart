@@ -89,6 +89,10 @@ class AuthService {
   //Delete user from the firebase
   Future deleteUser() async {
     try {
+      await FirebaseFirestore.instance
+          .collection('userData')
+          .doc(_auth.currentUser?.uid)
+          .delete();
       await _auth.currentUser!.delete();
       return 'Success';
     } on FirebaseAuthException catch (e) {
