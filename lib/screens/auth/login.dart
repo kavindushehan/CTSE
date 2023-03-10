@@ -107,17 +107,20 @@ class _EmailSigninState extends State<EmailSignin> {
                                     dynamic result = await _auth.signInEmail(
                                         email.text, pass.text);
                                     if (result == 'Success') {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text('Successfully Signed In'),
-                                      ));
                                       setState(() {
                                         isLoading = false;
                                       });
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => const Home()));
+                                       print('Successfully Logged In');
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content:
+                                          Text('Successfully Logged In'),backgroundColor: Colors.blue,
+                                    ));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                const Home()));
                                     } else {
                                       setState(() {
                                         isLoading = false;

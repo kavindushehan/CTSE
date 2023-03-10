@@ -214,7 +214,7 @@ class _MyProfileState extends State<MyProfile> {
                               isLoading = false;
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: new Text(result),
+                              content: new Text(result),backgroundColor: Colors.blue,
                             ));
                           } else {
                             setState(() {

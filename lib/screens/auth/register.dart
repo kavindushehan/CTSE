@@ -153,6 +153,9 @@ class _RegisterState extends State<Register> {
                               ),
                               child: const Text('Register'),
                               onPressed: () async {
+                                setState(() {
+                                      isLoading = true;
+                                    });
                                 if (registrationFormUser.currentState!
                                     .validate()) {
                                   dynamic result = await auth.registerUser(
@@ -162,11 +165,14 @@ class _RegisterState extends State<Register> {
                                       pass.text);
                                   print(result);
                                   if (result == 'Success') {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                     print('Successfully Created Account');
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(const SnackBar(
                                       content:
-                                          Text('Successfully Created Account'),
+                                          Text('Successfully Created Account'),backgroundColor: Colors.blue,
                                     ));
                                     Navigator.push(
                                         context,
@@ -174,6 +180,9 @@ class _RegisterState extends State<Register> {
                                             builder: (_) =>
                                                 const EmailSignin()));
                                   } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       content: Text(result),
