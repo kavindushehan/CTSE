@@ -14,7 +14,7 @@ class Wrapper extends StatelessWidget {
     final user = auth.currentUser;
 
     if (user != null) {
-      return const MyProfile();
+      return const Home();
     } else {
       return const EmailSignin();
     }

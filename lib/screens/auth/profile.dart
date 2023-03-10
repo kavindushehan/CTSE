@@ -9,6 +9,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../model/user.dart';
+import '../home.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -48,34 +49,26 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: const Text('Profile'),
-        ),
-        body: FutureBuilder<UserModel?>(
-          future: readUser(UserId),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final user = snapshot.data;
-              return user == null
-                  ? const Center(child: Text('No User'))
-                  : buildUserForm(user);
-              // :  Text(UserId);
-            } else {
-              return const Scaffold(
-                // backgroundColor: ,
-                body: Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.blueAccent,
-                  ),
-                ),
-              );
-            }
-          },
-        ));
-  }
+  Widget build(BuildContext context) => isLoading
+      ? const LoadingPage()
+      : Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: const Text('Profile'),
+          ),
+          body: FutureBuilder<UserModel?>(
+            future: readUser(UserId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final user = snapshot.data;
+                return user == null
+                    ? const Center(child: Text('No User'))
+                    : buildUserForm(user);
+              } else {
+                return const LoadingPage();
+              }
+            },
+          ));
 
   Future<UserModel?> readUser(userId) async {
     final docUser = _fireStore.collection("userData").doc(userId);
@@ -91,211 +84,10 @@ class _MyProfileState extends State<MyProfile> {
     return null;
   }
 
-  Widget buildUser(UserModel user) {
-    return ListView(children: [
-      Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 20.0,
-        ),
-        color: Colors.blue,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              user.firstName ?? 'FirstName',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 38,
-              ),
-            ),
-            const Text(
-              ' ',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 38,
-              ),
-            ),
-            Text(
-              user.lastName ?? 'FirstName',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 38,
-              ),
-            )
-          ],
-        ),
-      ),
-
-      const Center(
-        child: Image(
-          width: 250,
-          height: 250,
-          image: AssetImage('profile.png'),
-        ),
-      ),
-      Visibility(
-        visible: true,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 0.0,
-            left: 20.0,
-            right: 20.0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10.0,
-                ),
-                child: Text(
-                  ('Personal Info').toUpperCase(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Column(
-                    children: const <Widget>[
-                      Icon(
-                        Icons.abc_outlined,
-                        size: 40.0,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: Text(
-                          user.firstName ?? 'FirstName',
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Column(
-                    children: const <Widget>[
-                      Icon(
-                        Icons.abc_outlined,
-                        size: 40.0,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: Text(
-                          user.lastName ?? 'LastName',
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Column(
-                    children: const <Widget>[
-                      Icon(
-                        Icons.email_outlined,
-                        size: 40.0,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: Text(
-                          user.email ?? 'Email',
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      // Padding(padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      //   child: ElevatedButton(onPressed: (){
-      //     Navigator.of(context).push(MaterialPageRoute(builder: (_){
-      //       return UpdateProfile(user);
-      //     }));
-      //   },
-      //       child: const Text('Update Profile')),),
-      // Padding(padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      //   child: ElevatedButton(onPressed: (){
-      //     Navigator.push(context, MaterialPageRoute(builder: (_)=> const UpdatePassword()));
-      //   },
-      //       child: const Text('Update Password')),),
-      // Padding(padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      //   child: ElevatedButton(
-      //     style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-      //       onPressed: (){
-      //         showDialog<String>(
-      //           context: context,
-      //           builder: (BuildContext context) => AlertDialog(
-      //             title: const Text('Delete Account'),
-      //             content: const Text('If you delete this account, you will be lost your entered data and this account cannot be recovered again'),
-      //             actions: <Widget>[
-      //               TextButton(
-      //                 onPressed: () => Navigator.pop(context, 'Cancel'),
-      //                 child: const Text('Cancel'),
-
-      //               ),
-      //               TextButton(
-      //                 onPressed: () async {
-      //                   Navigator.pop(context, 'OK');
-      //                   dynamic result = deleteUser(user.uid);
-      //                   if(result!=null){
-      //                     ScaffoldMessenger.of(context).showSnackBar(
-      //                         const SnackBar(content: Text('Account Deleted Successfully'),
-      //                         ));
-      //                     Navigator.push(context, MaterialPageRoute(builder: (_)=>  EmailSignin()));
-
-      //                   }else{
-      //                     ScaffoldMessenger.of(context).showSnackBar(
-      //                         SnackBar(content: Text(result),
-      //                         ));
-      //                   }
-
-      //                 },
-      //                 child: const Text('Delete',style: TextStyle(color: Colors.red),),
-      //               ),
-      //             ],
-      //           ),
-      //         );
-      //       },
-      //       child: const Text('Delete Account')),
-
-      // )
-    ]);
-  }
-
   Widget buildUserForm(UserModel user) {
-    firstNameController.text = user.firstName ?? 'firstName';
-    lastNameController.text = user.lastName ?? 'firstName';
-    emailController.text = user.email ?? 'firstName';
+    firstNameController.text = user.firstName ?? 'First Name';
+    lastNameController.text = user.lastName ?? 'Last Name';
+    emailController.text = user.email ?? 'Email';
 
     return Form(
         key: updateUserForm,
@@ -405,11 +197,36 @@ class _MyProfileState extends State<MyProfile> {
                       padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size.fromHeight(
+                          minimumSize: const Size.fromHeight(
                               40), // fromHeight use double.infinity as width and 40 is the height
                         ),
                         child: const Text('Update Profile'),
-                        onPressed: ()  {
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          dynamic result = await _auth.updateUser(
+                              firstNameController.text,
+                              lastNameController.text,
+                              emailController.text);
+                          if (result == 'Success') {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: new Text(result),
+                            ));
+                          } else {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: new Text(result),
+                            ));
+                          }
+                          setState(() {
+                            isLoading = false;
+                          });
                         },
                       )),
                 ],
