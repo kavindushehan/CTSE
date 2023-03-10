@@ -136,7 +136,7 @@ class _MyProfileState extends State<MyProfile> {
               child: Image(
                 width: 250,
                 height: 250,
-                image: AssetImage('profile.png'),
+                image: AssetImage('change.jpg'),
               ),
             ),
             Padding(
