@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ctse_app/model/user.dart';
+import 'package:ctse_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -19,8 +19,13 @@ class AuthService {
         email: email,
         password: password,
       )
-          .then((userCredential) {
-        userModel.uid = userCredential.user?.uid;
+          .then((userCredential) async {
+        User? user = userCredential.user;
+        if (user != null) {
+          await user.updateDisplayName(firstName + " " + lastName);
+          userModel.uid = user.uid;
+          // other user model fields can be set here too
+        }
       });
 
       await _fireStore

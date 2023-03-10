@@ -55,7 +55,7 @@ class _RegisterState extends State<Register> {
                       child: Image(
                         width: 250,
                         height: 250,
-                        image: AssetImage('signup.png'),
+                        image: AssetImage('assets/signup.png'),
                       ),
                     ),
                     Padding(

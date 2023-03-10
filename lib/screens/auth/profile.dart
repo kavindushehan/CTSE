@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ctse_app/model/user.dart';
+import 'package:ctse_app/main.dart';
+import 'package:ctse_app/models/user.dart';
 import 'package:ctse_app/screens/auth/login.dart';
+import 'package:ctse_app/home.dart';
+import 'package:ctse_app/screens/mainscreen.dart';
 import 'package:ctse_app/services/auth.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -51,6 +53,11 @@ class _MyProfileState extends State<MyProfile> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             title: const Text('Profile'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => Main())),
+            ),
           ),
           body: FutureBuilder<UserModel?>(
             future: readUser(UserId),
@@ -92,46 +99,11 @@ class _MyProfileState extends State<MyProfile> {
         },
         child: Wrap(
           children: <Widget>[
-            Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 20.0,
-              ),
-              color: Colors.blue,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    user.firstName ?? 'FirstName',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 38,
-                    ),
-                  ),
-                  const Text(
-                    ' ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 38,
-                    ),
-                  ),
-                  Text(
-                    user.lastName ?? 'FirstName',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 38,
-                    ),
-                  )
-                ],
-              ),
-            ),
             const Center(
               child: Image(
                 width: 250,
                 height: 250,
-                image: AssetImage('change.jpg'),
+                image: AssetImage('assets/change.jpg'),
               ),
             ),
             Padding(
