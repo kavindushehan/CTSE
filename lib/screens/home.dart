@@ -1,4 +1,5 @@
 import 'package:ctse_app/screens/auth/login.dart';
+import 'package:ctse_app/screens/auth/profile.dart';
 import 'package:flutter/material.dart';
 import '../services/auth.dart';
 
@@ -8,7 +9,8 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Me',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -29,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo App'),
+        title: const Text('Me'),
       ),
       body: Column(
         children: <Widget>[
@@ -38,28 +40,22 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size.fromHeight(
+              minimumSize: const Size.fromHeight(
                   40), // fromHeight use double.infinity as width and 40 is the height
             ),
             child: const Text('Profile'),
             onPressed: () async {
-              dynamic result = await auth.signOut();
-              print(result);
-              if (result == 'Success') {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Successfully Signed Out'),
-                ));
+            
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => EmailSignin()));
-              }
-            },
+                    context, MaterialPageRoute(builder: (_) => MyProfile()));
+            }
           )),
           Container(
           height: 70,
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size.fromHeight(
+              minimumSize: const Size.fromHeight(
                   40), // fromHeight use double.infinity as width and 40 is the height
             ),
             child: const Text('Logout'),

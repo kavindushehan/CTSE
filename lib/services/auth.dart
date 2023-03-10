@@ -6,29 +6,31 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
-  Future registerUser(firstName,lastName,email,password) async {
+  Future registerUser(firstName, lastName, email, password) async {
     try {
-
       UserModel userModel = UserModel();
 
       userModel.firstName = firstName;
       userModel.lastName = lastName;
       userModel.email = email;
 
-
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: email,
         password: password,
-      ).then((userCredential){userModel.uid = userCredential.user?.uid;});
+      )
+          .then((userCredential) {
+        userModel.uid = userCredential.user?.uid;
+      });
 
-      
-
-      await _fireStore.collection('userData').doc(userModel.uid).set(userModel.toMap());
+      await _fireStore
+          .collection('userData')
+          .doc(userModel.uid)
+          .set(userModel.toMap());
 
       await _auth.signOut();
 
       return 'Success';
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return 'The password provided is too weak.';
@@ -87,6 +89,10 @@ class AuthService {
   //Delete user from the firebase
   Future deleteUser() async {
     try {
+      await FirebaseFirestore.instance
+          .collection('userData')
+          .doc(_auth.currentUser?.uid)
+          .delete();
       await _auth.currentUser!.delete();
       return 'Success';
     } on FirebaseAuthException catch (e) {
@@ -125,19 +131,31 @@ class AuthService {
     }
   }
 
+  //Return user id from firebaseAuth
   Future getCurrentUserId() async {
     final user = await _auth.currentUser;
-    if(user != null){
-      print(user.uid);
+    if (user != null) {
       return user.uid;
-    }else{
+    } else {
       return 'No User';
     }
   }
 
+  //Update firestore data
+  Future updateUser(firstNameUpdated, lastNameUpdated, emailUpdated) async {
+    try {
+      await _auth.currentUser?.updateEmail(emailUpdated);
+      await FirebaseFirestore.instance
+          .collection('userData')
+          .doc(_auth.currentUser?.uid)
+          .update({
+        'firstName': firstNameUpdated,
+        'lastName': lastNameUpdated,
+        'email': emailUpdated,
+      });
+      return 'Success';
+    } catch (e) {
+      return e.toString();
+    }
+  }
 }
-
-
-
-
-
