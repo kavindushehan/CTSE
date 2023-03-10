@@ -9,7 +9,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Me',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo App'),
+        title: const Text('Me'),
       ),
       body: Column(
         children: <Widget>[
@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size.fromHeight(
+              minimumSize: const Size.fromHeight(
                   40), // fromHeight use double.infinity as width and 40 is the height
             ),
             child: const Text('Profile'),
@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              minimumSize: Size.fromHeight(
+              minimumSize: const Size.fromHeight(
                   40), // fromHeight use double.infinity as width and 40 is the height
             ),
             child: const Text('Logout'),

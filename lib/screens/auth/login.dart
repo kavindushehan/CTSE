@@ -13,6 +13,8 @@ class EmailSignin extends StatefulWidget {
 }
 
 class _EmailSigninState extends State<EmailSignin> {
+
+  bool _obsecureText = true;
   bool isLoading = false;
   final AuthService _auth = AuthService();
   final _signInFormKey = GlobalKey<FormState>();
@@ -76,28 +78,42 @@ class _EmailSigninState extends State<EmailSignin> {
                                 return null;
                               },
                             ),
-                            TextFormField(
-                              controller: pass,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                hintText: 'Enter a Strong Password',
-                                labelText: 'Password *',
+                            Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: pass,
+                                  obscureText: _obsecureText,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Enter a Strong Password',
+                                    labelText: 'Password *',
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Enter a password';
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Enter a password';
-                                }
-                                return null;
-                              },
-                            ),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _obsecureText = !_obsecureText;
+                                    });
+                                  },
+                                  icon:
+                                      const Icon(Icons.remove_red_eye_outlined))
+                            ],
+                          ),
                             Container(
                                 height: 70,
                                 padding:
                                     const EdgeInsets.fromLTRB(10, 20, 10, 0),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    minimumSize: Size.fromHeight(
-                                        40), // fromHeight use double.infinity as width and 40 is the height
+                                    minimumSize: const Size.fromHeight(
+                                        40), 
                                   ),
                                   child: const Text('Login'),
                                   onPressed: () async {
@@ -132,7 +148,7 @@ class _EmailSigninState extends State<EmailSignin> {
                                     }
                                   },
                                 )),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             Row(

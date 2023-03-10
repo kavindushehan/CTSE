@@ -135,7 +135,6 @@ class AuthService {
   Future getCurrentUserId() async {
     final user = await _auth.currentUser;
     if (user != null) {
-      print(user.uid);
       return user.uid;
     } else {
       return 'No User';

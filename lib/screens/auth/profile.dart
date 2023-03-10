@@ -6,11 +6,7 @@ import 'package:ctse_app/services/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-import '../../model/user.dart';
-import '../home.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -45,7 +41,6 @@ class _MyProfileState extends State<MyProfile> {
       UserId = result!;
       isLoading = false;
     });
-    print(UserId);
     super.initState();
   }
 
@@ -79,7 +74,6 @@ class _MyProfileState extends State<MyProfile> {
       if (kDebugMode) {}
 
       currentUser = UserModel.fromMap(snapshot.data()!);
-      print(currentUser.firstName);
       return currentUser;
     }
     return null;
@@ -156,7 +150,7 @@ class _MyProfileState extends State<MyProfile> {
                         return 'Enter Your First Name';
                       }
                       if (!value.isValidName()) {
-                        return 'Name should not contain any numbers';
+                        return 'Please enter a valid name';
                       }
                       return null;
                     },
@@ -172,7 +166,7 @@ class _MyProfileState extends State<MyProfile> {
                         return 'Enter Your Last Name';
                       }
                       if (!value.isValidName()) {
-                        return 'Name should not contain any numbers';
+                        return 'Please enter a valid name';
                       }
                       return null;
                     },
@@ -194,8 +188,8 @@ class _MyProfileState extends State<MyProfile> {
                     },
                   ),
                   Container(
-                      height: 70,
-                      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                      height: 50,
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(
