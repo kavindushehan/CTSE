@@ -29,6 +29,7 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) => isLoading
       ? const LoadingPage()
       : Scaffold(
+        appBar: AppBar(),
           body: SingleChildScrollView(
           child: Form(
               key: registrationFormUser,

@@ -1,3 +1,4 @@
+import 'package:ctse_app/screens/auth/profile.dart';
 import 'package:ctse_app/screens/home.dart';
 import 'package:ctse_app/screens/auth/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +14,7 @@ class Wrapper extends StatelessWidget {
     final user = auth.currentUser;
 
     if (user != null) {
-      return const Home();
+      return const MyProfile();
     } else {
       return const EmailSignin();
     }

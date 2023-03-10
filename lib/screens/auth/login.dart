@@ -57,7 +57,7 @@ class _EmailSigninState extends State<EmailSignin> {
                               child: Image(
                                 width: 250,
                                 height: 250,
-                                image: AssetImage('dashboard.png'),
+                                image: AssetImage('assets/dashboard.png'),
                               ),
                             ),
                             TextFormField(

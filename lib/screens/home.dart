@@ -1,4 +1,5 @@
 import 'package:ctse_app/screens/auth/login.dart';
+import 'package:ctse_app/screens/auth/profile.dart';
 import 'package:flutter/material.dart';
 import '../services/auth.dart';
 
@@ -43,16 +44,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             child: const Text('Profile'),
             onPressed: () async {
-              dynamic result = await auth.signOut();
-              print(result);
-              if (result == 'Success') {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Successfully Signed Out'),
-                ));
+            
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => EmailSignin()));
-              }
-            },
+                    context, MaterialPageRoute(builder: (_) => MyProfile()));
+            }
           )),
           Container(
           height: 70,

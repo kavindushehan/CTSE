@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-        Duration(seconds: 5),
+        Duration(seconds: 1),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Wrapper())));
   }
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/logo.png', // Replace this with your own image path
+                'logo.png',
                 width: 200,
                 height: 200,
               ),
