@@ -1,9 +1,11 @@
+import 'package:ctse_app/main.dart';
 import 'package:ctse_app/screens/auth/register.dart';
+import 'package:ctse_app/home.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth.dart';
-import '../home.dart';
+import '../mainscreen.dart';
 
 class EmailSignin extends StatefulWidget {
   const EmailSignin({Key? key}) : super(key: key);
@@ -13,7 +15,6 @@ class EmailSignin extends StatefulWidget {
 }
 
 class _EmailSigninState extends State<EmailSignin> {
-
   bool _obsecureText = true;
   bool isLoading = false;
   final AuthService _auth = AuthService();
@@ -79,41 +80,40 @@ class _EmailSigninState extends State<EmailSignin> {
                               },
                             ),
                             Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: pass,
-                                  obscureText: _obsecureText,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Enter a Strong Password',
-                                    labelText: 'Password *',
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: pass,
+                                    obscureText: _obsecureText,
+                                    decoration: const InputDecoration(
+                                      hintText: 'Enter a Strong Password',
+                                      labelText: 'Password *',
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Enter a password';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Enter a password';
-                                    }
-                                    return null;
-                                  },
                                 ),
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _obsecureText = !_obsecureText;
-                                    });
-                                  },
-                                  icon:
-                                      const Icon(Icons.remove_red_eye_outlined))
-                            ],
-                          ),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _obsecureText = !_obsecureText;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                        Icons.remove_red_eye_outlined))
+                              ],
+                            ),
                             Container(
                                 height: 70,
                                 padding:
                                     const EdgeInsets.fromLTRB(10, 20, 10, 0),
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    minimumSize: const Size.fromHeight(
-                                        40), 
+                                    minimumSize: const Size.fromHeight(40),
                                   ),
                                   child: const Text('Login'),
                                   onPressed: () async {
@@ -126,17 +126,16 @@ class _EmailSigninState extends State<EmailSignin> {
                                       setState(() {
                                         isLoading = false;
                                       });
-                                       print('Successfully Logged In');
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content:
-                                          Text('Successfully Logged In'),backgroundColor: Colors.blue,
-                                    ));
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const Home()));
+                                      print('Successfully Logged In');
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text('Successfully Logged In'),
+                                        backgroundColor: Colors.blue,
+                                      ));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => const Main()));
                                     } else {
                                       setState(() {
                                         isLoading = false;
