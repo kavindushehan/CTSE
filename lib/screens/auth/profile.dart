@@ -1,14 +1,14 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ctse_app/main.dart';
 import 'package:ctse_app/models/user.dart';
 import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/home.dart';
-import 'package:ctse_app/screens/mainscreen.dart';
 import 'package:ctse_app/services/auth.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
@@ -29,6 +29,9 @@ class _MyProfileState extends State<MyProfile> {
   late dynamic result = 'Email';
 
   final updateUserForm = GlobalKey<FormState>();
+
+  File? _image;
+  final _picker = ImagePicker();
 
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -86,6 +89,13 @@ class _MyProfileState extends State<MyProfile> {
     return null;
   }
 
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = pickedFile != null ? File(pickedFile.path) : null;
+    });
+  }
+
   Widget buildUserForm(UserModel user) {
     firstNameController.text = user.firstName ?? 'First Name';
     lastNameController.text = user.lastName ?? 'Last Name';
@@ -99,18 +109,39 @@ class _MyProfileState extends State<MyProfile> {
         },
         child: Wrap(
           children: <Widget>[
-            const Center(
-              child: Image(
-                width: 250,
-                height: 250,
-                image: AssetImage('assets/change.jpg'),
-              ),
-            ),
+            // const Center(
+            //   child: Image(
+            //     width: 250,
+            //     height: 250,
+            //     image: AssetImage('assets/change.jpg'),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0.0, 20, 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 50.0),
+                    child: Center(
+                      child: GestureDetector(
+                          onTap: _pickImage,
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage:
+                                    _image != null ? FileImage(_image!) : null,
+                                child: _image == null
+                                    ? const Text('Add Photo')
+                                    : null,
+                              ),
+                              SizedBox(height: 10),
+                              Text('Upload Image'),
+                            ],
+                          )),
+                    ),
+                  ),
                   TextFormField(
                     controller: firstNameController,
                     decoration: const InputDecoration(
@@ -175,7 +206,8 @@ class _MyProfileState extends State<MyProfile> {
                           dynamic result = await _auth.updateUser(
                               firstNameController.text,
                               lastNameController.text,
-                              emailController.text);
+                              emailController.text,
+                              _image);
                           if (result == 'Success') {
                             setState(() {
                               isLoading = false;
@@ -184,6 +216,10 @@ class _MyProfileState extends State<MyProfile> {
                               content: new Text(result),
                               backgroundColor: Colors.blue,
                             ));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const Main()));
                           } else {
                             setState(() {
                               isLoading = false;

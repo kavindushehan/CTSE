@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -57,7 +59,6 @@ class AuthService {
       try {
         UserCredential result = await _auth.signInWithEmailAndPassword(
             email: formEmail, password: formPassword);
-        print(result);
         return 'Success';
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -147,9 +148,21 @@ class AuthService {
   }
 
   //Update firestore data
-  Future updateUser(firstNameUpdated, lastNameUpdated, emailUpdated) async {
+  Future updateUser(
+      firstNameUpdated, lastNameUpdated, emailUpdated, image) async {
     try {
+      if (image != null) {
+        final fileName = basename(image!.path);
+        final ref =
+            FirebaseStorage.instance.ref('/profile').child('images/$fileName');
+        await ref.putFile(image!);
+        final photoURL = await ref.getDownloadURL();
+        await _auth.currentUser?.updatePhotoURL(photoURL);
+      }
+
       await _auth.currentUser?.updateEmail(emailUpdated);
+      await _auth.currentUser
+          ?.updateDisplayName(firstNameUpdated + " " + lastNameUpdated);
       await FirebaseFirestore.instance
           .collection('userData')
           .doc(_auth.currentUser?.uid)
