@@ -10,6 +10,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../widgets/loading.dart';
+
 class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
 
@@ -290,18 +292,3 @@ class _MyProfileState extends State<MyProfile> {
   }
 }
 
-class LoadingPage extends StatelessWidget {
-  const LoadingPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      // backgroundColor: ,
-      body: Center(
-        child: CircularProgressIndicator(
-          color: Colors.blueAccent,
-        ),
-      ),
-    );
-  }
-}
