@@ -59,7 +59,7 @@ class _MyProfileState extends State<MyProfile> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Main())),
+                  context, MaterialPageRoute(builder: (context) => const Main())),
             ),
           ),
           body: FutureBuilder<UserModel?>(
@@ -109,20 +109,13 @@ class _MyProfileState extends State<MyProfile> {
         },
         child: Wrap(
           children: <Widget>[
-            // const Center(
-            //   child: Image(
-            //     width: 250,
-            //     height: 250,
-            //     image: AssetImage('assets/change.jpg'),
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0.0, 20, 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    margin: EdgeInsets.only(top: 50.0),
+                    margin: const EdgeInsets.only(top: 50.0),
                     child: Center(
                       child: GestureDetector(
                           onTap: _pickImage,
@@ -136,8 +129,8 @@ class _MyProfileState extends State<MyProfile> {
                                     ? const Text('Add Photo')
                                     : null,
                               ),
-                              SizedBox(height: 10),
-                              Text('Upload Image'),
+                              const SizedBox(height: 10),
+                              const Text('Upload Image'),
                             ],
                           )),
                     ),
@@ -240,7 +233,7 @@ class _MyProfileState extends State<MyProfile> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           minimumSize: const Size.fromHeight(
-                              40), // fromHeight use double.infinity as width and 40 is the height
+                              40), 
                         ),
                         child: const Text('Delete Account'),
                         onPressed: () async {
