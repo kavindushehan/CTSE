@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'fabtabs.dart';
 
 class SideMenu extends StatefulWidget {
+  const SideMenu({super.key});
+
   @override
   State<SideMenu> createState() => _SideMenuState();
 }
@@ -13,8 +15,6 @@ class _SideMenuState extends State<SideMenu> {
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final user = auth.currentUser;
-
-    print(user);
 
     return Drawer(
       backgroundColor: Colors.white,
@@ -26,12 +26,12 @@ class _SideMenuState extends State<SideMenu> {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: AssetImage('assets/avatar.png'),
+                backgroundImage: NetworkImage(user?.photoURL ?? ''),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 user?.displayName ?? '',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -40,8 +40,8 @@ class _SideMenuState extends State<SideMenu> {
             ]),
           ),
           ListTile(
-            leading: Icon(Icons.home_filled),
-            title: Text("Home"),
+            leading: const Icon(Icons.home_filled),
+            title: const Text("Home"),
             onTap: () => {
               Navigator.pushReplacement(
                   context,
@@ -50,8 +50,8 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.person),
-            title: Text("Profile"),
+            leading: const Icon(Icons.person),
+            title: const Text("Profile"),
             onTap: () => {
               Navigator.pushReplacement(
                   context,
@@ -60,8 +60,8 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text("Logout"),
+            leading: const Icon(Icons.logout),
+            title: const Text("Logout"),
             onTap: () => {
               Navigator.pushReplacement(
                   context,
