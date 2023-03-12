@@ -7,6 +7,7 @@ import 'package:path/path.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final FirebaseStorage _fireStorage = FirebaseStorage.instance;
 
   Future registerUser(firstName, lastName, email, password) async {
     try {
@@ -16,7 +17,7 @@ class AuthService {
       userModel.lastName = lastName;
       userModel.email = email;
 
-      await FirebaseAuth.instance
+      await _auth
           .createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -59,6 +60,7 @@ class AuthService {
       try {
         UserCredential result = await _auth.signInWithEmailAndPassword(
             email: formEmail, password: formPassword);
+        print(result);
         return 'Success';
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -72,7 +74,7 @@ class AuthService {
     }
   }
 
-  Future SignInAnon() async {
+  Future signInAnon() async {
     try {
       UserCredential result = await _auth.signInAnonymously();
       return (result);
@@ -95,7 +97,7 @@ class AuthService {
   //Delete user from the firebase
   Future deleteUser() async {
     try {
-      await FirebaseFirestore.instance
+      await _fireStore
           .collection('userData')
           .doc(_auth.currentUser?.uid)
           .delete();
@@ -153,8 +155,7 @@ class AuthService {
     try {
       if (image != null) {
         final fileName = basename(image!.path);
-        final ref =
-            FirebaseStorage.instance.ref('/profile').child('images/$fileName');
+        final ref = _fireStorage.ref('/profile').child('images/$fileName');
         await ref.putFile(image!);
         final photoURL = await ref.getDownloadURL();
         await _auth.currentUser?.updatePhotoURL(photoURL);
@@ -163,7 +164,7 @@ class AuthService {
       await _auth.currentUser?.updateEmail(emailUpdated);
       await _auth.currentUser
           ?.updateDisplayName(firstNameUpdated + " " + lastNameUpdated);
-      await FirebaseFirestore.instance
+      await _fireStore
           .collection('userData')
           .doc(_auth.currentUser?.uid)
           .update({

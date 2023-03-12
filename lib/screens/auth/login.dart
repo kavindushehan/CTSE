@@ -1,11 +1,11 @@
-import 'package:ctse_app/main.dart';
 import 'package:ctse_app/screens/auth/register.dart';
 import 'package:ctse_app/home.dart';
 import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth.dart';
-import '../mainscreen.dart';
+import '../../widgets/loading.dart';
+
 
 class EmailSignin extends StatefulWidget {
   const EmailSignin({Key? key}) : super(key: key);
@@ -175,18 +175,4 @@ class _EmailSigninState extends State<EmailSignin> {
                   ))));
 }
 
-class LoadingPage extends StatelessWidget {
-  const LoadingPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      // backgroundColor: ,
-      body: Center(
-        child: CircularProgressIndicator(
-          color: Colors.blueAccent,
-        ),
-      ),
-    );
-  }
-}
