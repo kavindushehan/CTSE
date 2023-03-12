@@ -14,13 +14,13 @@ class AddBudgetModel extends StatefulWidget {
 
 class _AddBudgetModalState extends State<AddBudgetModel> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _reasonController = TextEditingController();
+  final _amountController = TextEditingController();
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
+    _reasonController.dispose();
+    _amountController.dispose();
     super.dispose();
   }
 
@@ -48,7 +48,7 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    controller: _titleController,
+                    controller: _reasonController,
                     decoration: InputDecoration(
                       labelText: 'Reason',
                       border: OutlineInputBorder(),
@@ -62,7 +62,7 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                   ),
                   SizedBox(height: 16.0),
                   TextFormField(
-                    controller: _descriptionController,
+                    controller: _amountController,
                     decoration: InputDecoration(
                       labelText: 'Amount',
                       border: OutlineInputBorder(),
@@ -80,8 +80,8 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           String id = Uuid().v4();
-                          String reason = _titleController.text.trim();
-                          String amount = _descriptionController.text.trim();
+                          String reason = _reasonController.text.trim();
+                          String amount = _amountController.text.trim();
                           Budgets budget = Budgets(
                             id: id,
                             reason: reason,

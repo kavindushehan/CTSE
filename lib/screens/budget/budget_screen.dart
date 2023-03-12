@@ -86,9 +86,9 @@ class _HomeState extends State<BudgetScreen> {
   }
 
   void _showEditBudgetDialog(BuildContext context, Budgets budget) {
-    final TextEditingController titleController =
+    final TextEditingController reasonController =
         TextEditingController(text: budget.reason);
-    final TextEditingController descriptionController =
+    final TextEditingController amountController =
         TextEditingController(text: budget.amount);
 
     showDialog(
@@ -100,13 +100,13 @@ class _HomeState extends State<BudgetScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: titleController,
+                controller: reasonController,
                 decoration: InputDecoration(
                   labelText: "Reason",
                 ),
               ),
               TextField(
-                controller: descriptionController,
+                controller: amountController,
                 decoration: InputDecoration(
                   labelText: "Amount",
                 ),
@@ -122,8 +122,8 @@ class _HomeState extends State<BudgetScreen> {
             ),
             TextButton(
               onPressed: () {
-                budget.reason = titleController.text;
-                budget.amount = descriptionController.text;
+                budget.reason = reasonController.text;
+                budget.amount = amountController.text;
                 _budgetsService.updateBudgets(budget);
                 Navigator.pop(context);
               },
