@@ -2,6 +2,7 @@ import 'package:ctse_app/services/validators.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/auth.dart';
+import '../../widgets/loading.dart';
 import 'login.dart';
 
 class Register extends StatefulWidget {
@@ -227,18 +228,4 @@ class _RegisterState extends State<Register> {
           ));
 }
 
-class LoadingPage extends StatelessWidget {
-  const LoadingPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      // backgroundColor: ,
-      body: Center(
-        child: CircularProgressIndicator(
-          color: Colors.blueAccent,
-        ),
-      ),
-    );
-  }
-}
