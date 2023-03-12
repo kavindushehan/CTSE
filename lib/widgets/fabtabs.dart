@@ -1,13 +1,11 @@
-// import 'package:bottomtabbarwithsidemenu/screens/home/home.dart';
-// import 'package:bottomtabbarwithsidemenu/screens/more/more.dart';
-// import 'package:bottomtabbarwithsidemenu/screens/profile/profile.dart';
-// import 'package:bottomtabbarwithsidemenu/screens/team/team.dart';
 import 'package:ctse_app/screens/auth/profile.dart';
 import 'package:ctse_app/screens/mainscreen.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/todo/add_todo.dart';
 import '../services/auth.dart';
 import '../screens/auth/login.dart';
+import '../services/todoService.dart';
 
 class FabTabs extends StatefulWidget {
   int selectedIndex = 0;
@@ -19,6 +17,7 @@ class FabTabs extends StatefulWidget {
 
 class _FabTabsState extends State<FabTabs> {
   final AuthService auth = AuthService();
+  final _todosService = TodosService();
   int currentIndex = 0;
 
   void onItemTapped(int index) async {
@@ -76,7 +75,17 @@ class _FabTabsState extends State<FabTabs> {
         backgroundColor: Colors.blueAccent,
         child: Icon(Icons.add),
         onPressed: () {
-          print("add fab button");
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AddTodoModal(
+                onTodoAdded: (todo) async {
+                  await _todosService.createTodos(todo);
+                },
+              );
+            },
+          );
+          ;
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -103,7 +112,7 @@ class _FabTabsState extends State<FabTabs> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.home_filled,
+                          Icons.list,
                           color: currentIndex == 0 ? Colors.blue : Colors.grey,
                         ),
                         Text(
