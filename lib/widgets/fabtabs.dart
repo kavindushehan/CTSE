@@ -1,4 +1,5 @@
 import 'package:ctse_app/screens/auth/profile.dart';
+import 'package:ctse_app/screens/budget/budget_screen.dart';
 import 'package:ctse_app/screens/mainscreen.dart';
 import 'package:flutter/material.dart';
 
@@ -64,7 +65,7 @@ class _FabTabsState extends State<FabTabs> {
         : currentIndex == 1
             ? MyProfile()
             : currentIndex == 2
-                ? Home()
+                ? BudgetScreen()
                 : Home();
     return Scaffold(
       body: PageStorage(
