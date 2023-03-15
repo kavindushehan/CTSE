@@ -16,7 +16,7 @@ class BudgetsService {
 
   Stream<List<Budgets>> getBudgets() {
     return _db
-        .collection('budgetData')
+        .collection('userData')
         .doc(_uid)
         .collection(collectionName)
         .orderBy("reason")
@@ -27,7 +27,7 @@ class BudgetsService {
 
   Future<void> createBudgets(Budgets budget) async {
     await _db
-        .collection('budgetData')
+        .collection('userData')
         .doc(_uid)
         .collection(collectionName)
         .doc(budget.id)
@@ -36,7 +36,7 @@ class BudgetsService {
 
   Future<void> updateBudgets(Budgets budget) async {
     await _db
-        .collection('budgetData')
+        .collection('userData')
         .doc(_uid)
         .collection(collectionName)
         .doc(budget.id)
@@ -45,7 +45,7 @@ class BudgetsService {
 
   Future<void> deleteBudgets(String id) async {
     await _db
-        .collection('budgetData')
+        .collection('userData')
         .doc(_uid)
         .collection(collectionName)
         .doc(id)
