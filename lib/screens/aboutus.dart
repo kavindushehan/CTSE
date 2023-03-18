@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../home.dart';
+
 class AboutUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('About Us'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const Main())),
+        ),
       ),
       body: Container(
         padding: EdgeInsets.all(16.0),
