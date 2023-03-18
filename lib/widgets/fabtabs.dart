@@ -1,3 +1,4 @@
+import 'package:ctse_app/screens/aboutus.dart';
 import 'package:ctse_app/screens/auth/profile.dart';
 import 'package:ctse_app/screens/budget/budget_screen.dart';
 import 'package:ctse_app/screens/mainscreen.dart';
@@ -66,7 +67,9 @@ class _FabTabsState extends State<FabTabs> {
             ? MyProfile()
             : currentIndex == 2
                 ? BudgetScreen()
-                : Home();
+                : currentIndex == 4
+                    ? AboutUsPage()
+                    : Home();
     return Scaffold(
       body: PageStorage(
         child: currentScreen,

@@ -16,6 +16,23 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
   final _formKey = GlobalKey<FormState>();
   final _reasonController = TextEditingController();
   final _amountController = TextEditingController();
+  double _amount = 0;
+
+  void _incrementAmount() {
+    setState(() {
+      _amount++;
+      _amountController.text = _amount.toString();
+    });
+  }
+
+  void _decrementAmount() {
+    setState(() {
+      if (_amount > 0) {
+        _amount--;
+        _amountController.text = _amount.toString();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -61,18 +78,38 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                     },
                   ),
                   SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _amountController,
-                    decoration: InputDecoration(
-                      labelText: 'Amount',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an amount';
-                      }
-                      return null;
-                    },
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: _decrementAmount,
+                        icon: Icon(Icons.remove),
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Amount',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an amount';
+                            }
+                            return null;
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _amount = double.parse(value);
+                            });
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: _incrementAmount,
+                        icon: Icon(Icons.add),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 16.0),
                   Center(
