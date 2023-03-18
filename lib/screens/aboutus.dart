@@ -74,7 +74,7 @@ class AboutUsPage extends StatelessWidget {
             ),
             SizedBox(height: 30.0),
             Text(
-              'For any feedback or suggestions, please feel free to contact us at [email protected]',
+              'For any feedback or suggestions, please feel free to contact us.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,

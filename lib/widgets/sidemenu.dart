@@ -60,7 +60,7 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.home_filled),
+            leading: const Icon(Icons.info_outline),
             title: const Text("About Us"),
             onTap: () => {
               Navigator.pushReplacement(
