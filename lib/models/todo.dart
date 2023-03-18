@@ -2,11 +2,13 @@ class Todos {
   final String id;
   String title;
   String description;
+  DateTime dateTime;
 
   Todos({
     required this.id,
     required this.title,
     required this.description,
+    required this.dateTime,
   });
 
   factory Todos.fromJson(Map<String, dynamic> json) {
@@ -14,6 +16,7 @@ class Todos {
       id: json['id'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
+      dateTime: DateTime.parse(json['dateTime'] as String),
     );
   }
 
@@ -21,5 +24,6 @@ class Todos {
         'id': id,
         'title': title,
         'description': description,
+        'dateTime': dateTime.toIso8601String(),
       };
 }

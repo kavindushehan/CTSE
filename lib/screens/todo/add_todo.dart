@@ -17,11 +17,35 @@ class _AddTodoModalState extends State<AddTodoModal> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showDateTimePicker() async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    if (pickedDate != null) {
+      final pickedTime = await showTimePicker(
+        context: context,
+        initialTime: _selectedTime,
+      );
+      if (pickedTime != null) {
+        setState(() {
+          _selectedDate = pickedDate;
+          _selectedTime = pickedTime;
+        });
+      }
+    }
   }
 
   @override
@@ -76,6 +100,22 @@ class _AddTodoModalState extends State<AddTodoModal> {
                     },
                   ),
                   const SizedBox(height: 16.0),
+                  InkWell(
+                    onTap: () async {
+                      await _showDateTimePicker();
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_today),
+                        const SizedBox(width: 8.0),
+                        Text(
+                          '${_selectedDate.toLocal().toString().substring(0, 10)} ${_selectedTime.format(context)}',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
                   Center(
                     child: ElevatedButton(
                       onPressed: () async {
@@ -88,6 +128,12 @@ class _AddTodoModalState extends State<AddTodoModal> {
                             id: id,
                             title: title,
                             description: description,
+                            dateTime: DateTime(
+                                _selectedDate.year,
+                                _selectedDate.month,
+                                _selectedDate.day,
+                                _selectedTime.hour,
+                                _selectedTime.minute),
                           );
                           await widget.onTodoAdded(todo);
                           Navigator.pop(context);
