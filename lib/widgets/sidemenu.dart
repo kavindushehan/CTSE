@@ -60,6 +60,16 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text("About Us"),
+            onTap: () => {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FabTabs(selectedIndex: 4)))
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text("Logout"),
             onTap: () => {

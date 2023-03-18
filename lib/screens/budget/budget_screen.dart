@@ -14,15 +14,70 @@ class BudgetScreen extends StatefulWidget {
 
 class _HomeState extends State<BudgetScreen> {
   final BudgetsService _budgetsService = BudgetsService();
+  List<Budgets> _budgets = [];
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SideMenu(),
       appBar: AppBar(
-        title: Text("Budget"),
+        title: Text('Budgets'),
         backgroundColor: Colors.blue,
         actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text("Search Budgets"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search',
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: InputBorder.none,
+                          ),
+                          autofocus: true,
+                          onChanged: (value) {
+                            // Update search query
+                            setState(() {
+                              _searchQuery = value;
+                            });
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                // Clear search query
+                                setState(() {
+                                  _searchQuery = '';
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: Text('Clear'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Search'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
@@ -53,6 +108,12 @@ class _HomeState extends State<BudgetScreen> {
             itemCount: budgets.length,
             itemBuilder: (context, index) {
               final budget = budgets[index];
+              if (_searchQuery.isNotEmpty &&
+                  !budget.reason
+                      .toLowerCase()
+                      .contains(_searchQuery.toLowerCase())) {
+                return Container();
+              }
               return Slidable(
                   actionPane: SlidableDrawerActionPane(),
                   actionExtentRatio: 0.25,
