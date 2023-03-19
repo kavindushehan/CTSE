@@ -18,6 +18,8 @@ class _HomeState extends State<BudgetScreen> {
   List<Budgets> _budgets = [];
   String _searchQuery = '';
   bool _isSearching = false;
+  bool _showCompleted = false;
+  bool _showNonCompleted = true;
 
   @override
   void initState() {
@@ -76,6 +78,37 @@ class _HomeState extends State<BudgetScreen> {
               );
             },
           ),
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              setState(() {
+                _showCompleted = value == 'completed';
+                _showNonCompleted = value == 'non_completed';
+              });
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'completed',
+                child: Row(
+                  children: [
+                    Icon(Icons.done_all, color: Colors.green),
+                    SizedBox(width: 8),
+                    Text('Completed'),
+                  ],
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'non_completed',
+                child: Row(
+                  children: [
+                    Icon(Icons.list_alt, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text('Non-Completed'),
+                  ],
+                ),
+              ),
+            ],
+            icon: Icon(Icons.filter_alt, color: Colors.white),
+          )
         ],
       ),
       body: StreamBuilder<List<Budgets>>(
@@ -101,6 +134,12 @@ class _HomeState extends State<BudgetScreen> {
 
           List<Budgets> getNonCompletedBudgets(List<Budgets> budgets) {
             return budgets.where((budget) => !budget.isCompleted).toList();
+          }
+
+          if (_showCompleted) {
+            budgets = getCompletedBudgets(budgets);
+          } else if (_showNonCompleted) {
+            budgets = getNonCompletedBudgets(budgets);
           }
 
           return ListView.builder(
