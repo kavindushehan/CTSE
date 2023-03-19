@@ -81,11 +81,26 @@ class _HomeState extends State<BudgetScreen> {
           PopupMenuButton<String>(
             onSelected: (String value) {
               setState(() {
-                _showCompleted = value == 'completed';
-                _showNonCompleted = value == 'non_completed';
+                if (value == 'all') {
+                  _showCompleted = true;
+                  _showNonCompleted = true;
+                } else {
+                  _showCompleted = value == 'completed';
+                  _showNonCompleted = value == 'non_completed';
+                }
               });
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'all',
+                child: Row(
+                  children: [
+                    Icon(Icons.all_inclusive, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text('All'),
+                  ],
+                ),
+              ),
               PopupMenuItem<String>(
                 value: 'completed',
                 child: Row(
@@ -102,7 +117,7 @@ class _HomeState extends State<BudgetScreen> {
                   children: [
                     Icon(Icons.list_alt, color: Colors.red),
                     SizedBox(width: 8),
-                    Text('Non-Completed'),
+                    Text('Non Completed'),
                   ],
                 ),
               ),
@@ -128,24 +143,22 @@ class _HomeState extends State<BudgetScreen> {
               return title.contains(query) || description.contains(query);
             }).toList();
           }
-          List<Budgets> getCompletedBudgets(List<Budgets> budgets) {
-            return budgets.where((budget) => budget.isCompleted).toList();
-          }
 
-          List<Budgets> getNonCompletedBudgets(List<Budgets> budgets) {
-            return budgets.where((budget) => !budget.isCompleted).toList();
-          }
-
-          if (_showCompleted) {
-            budgets = getCompletedBudgets(budgets);
+          List<Budgets> filteredBudgets = [];
+          if (_showCompleted && _showNonCompleted) {
+            filteredBudgets = budgets;
+          } else if (_showCompleted) {
+            filteredBudgets =
+                budgets.where((budget) => budget.isCompleted).toList();
           } else if (_showNonCompleted) {
-            budgets = getNonCompletedBudgets(budgets);
+            filteredBudgets =
+                budgets.where((budget) => !budget.isCompleted).toList();
           }
 
           return ListView.builder(
-            itemCount: budgets.length,
+            itemCount: filteredBudgets.length,
             itemBuilder: (context, index) {
-              final budget = budgets[index];
+              final budget = filteredBudgets[index];
               return Card(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
