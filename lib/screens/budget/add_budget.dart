@@ -17,6 +17,8 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
   final _reasonController = TextEditingController();
   final _amountController = TextEditingController();
   double _amount = 0;
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedTime = TimeOfDay.now();
 
   void _incrementAmount() {
     setState(() {
@@ -39,6 +41,27 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
     _reasonController.dispose();
     _amountController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showDateTimePicker() async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+    if (pickedDate != null) {
+      final pickedTime = await showTimePicker(
+        context: context,
+        initialTime: _selectedTime,
+      );
+      if (pickedTime != null) {
+        setState(() {
+          _selectedDate = pickedDate;
+          _selectedTime = pickedTime;
+        });
+      }
+    }
   }
 
   @override
@@ -78,6 +101,22 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                     },
                   ),
                   SizedBox(height: 16.0),
+                  InkWell(
+                    onTap: () async {
+                      await _showDateTimePicker();
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_today),
+                        const SizedBox(width: 8.0),
+                        Text(
+                          '${_selectedDate.toLocal().toString().substring(0, 10)} ${_selectedTime.format(context)}',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
                   Row(
                     children: [
                       IconButton(
@@ -123,6 +162,12 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                             id: id,
                             reason: reason,
                             amount: amount,
+                            dateTime: DateTime(
+                                _selectedDate.year,
+                                _selectedDate.month,
+                                _selectedDate.day,
+                                _selectedTime.hour,
+                                _selectedTime.minute),
                           );
                           await widget.onBudgetAdded(budget);
                           Navigator.pop(context);

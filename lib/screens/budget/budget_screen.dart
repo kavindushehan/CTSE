@@ -147,37 +147,99 @@ class _HomeState extends State<BudgetScreen> {
             itemBuilder: (context, index) {
               final budget = budgets[index];
               return Card(
-                child: ListTile(
-                  title: Text(budget.reason),
-                  subtitle: Text('Rs' + ' ' + (budget.amount) + '.00'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Checkbox(
-                        value: budget.isCompleted,
-                        onChanged: (value) {
-                          setState(() {
-                            budget.isCompleted = value!;
-                            _budgetsService.updateBudgets(budget);
-                          });
-                        },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            budget.reason,
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4.0),
+                          Text(
+                            'Rs ${budget.amount}.00',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        color: Colors.blue,
-                        onPressed: () {
-                          _showEditBudgetDialog(context, budget);
-                        },
+                    ),
+                    // Divider(thickness: 1.0, height: 0.0),
+                    ListTile(
+                      leading: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.date_range,
+                            size: 20.0,
+                            color: Colors.grey[600],
+                          ),
+                          const SizedBox(width: 4.0),
+                          Text(
+                            '${budget.dateTime.toLocal().toString().substring(0, 10)}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(width: 16.0),
+                          Icon(
+                            Icons.access_time,
+                            size: 20.0,
+                            color: Colors.grey[600],
+                          ),
+                          const SizedBox(width: 4.0),
+                          Text(
+                            '${budget.dateTime.toLocal().toString().substring(10, 16)}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        color: Colors.red,
-                        onPressed: () {
-                          _budgetsService.deleteBudgets(budget.id);
-                        },
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(height: 3.0),
+                          Checkbox(
+                            value: budget.isCompleted,
+                            onChanged: (value) {
+                              setState(() {
+                                budget.isCompleted = value!;
+                                _budgetsService.updateBudgets(budget);
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            color: Colors.blue,
+                            onPressed: () {
+                              _showEditBudgetDialog(context, budget);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            color: Colors.red,
+                            onPressed: () {
+                              _budgetsService.deleteBudgets(budget.id);
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 3.0),
+                  ],
                 ),
               );
             },
