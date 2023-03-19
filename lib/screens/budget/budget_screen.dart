@@ -149,7 +149,7 @@ class _HomeState extends State<BudgetScreen> {
               return Card(
                 child: ListTile(
                   title: Text(budget.reason),
-                  subtitle: Text(budget.amount),
+                  subtitle: Text('Rs' + ' ' + (budget.amount) + '.00'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
