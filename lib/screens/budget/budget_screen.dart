@@ -14,68 +14,51 @@ class BudgetScreen extends StatefulWidget {
 
 class _HomeState extends State<BudgetScreen> {
   final BudgetsService _budgetsService = BudgetsService();
+  late TextEditingController _searchController;
   List<Budgets> _budgets = [];
   String _searchQuery = '';
+  bool _isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: SideMenu(),
       appBar: AppBar(
-        title: Text('Budgets'),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                decoration: const InputDecoration(
+                    hintText: "Search budgets...",
+                    hintStyle: TextStyle(color: Colors.white),
+                    border: InputBorder.none),
+                onChanged: (value) {
+                  setState(() {});
+                },
+              )
+            : const Text("Budgets"),
         backgroundColor: Colors.blue,
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Icon(_isSearching ? Icons.cancel : Icons.search),
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text("Search Budgets"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: InputBorder.none,
-                          ),
-                          autofocus: true,
-                          onChanged: (value) {
-                            // Update search query
-                            setState(() {
-                              _searchQuery = value;
-                            });
-                          },
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                // Clear search query
-                                setState(() {
-                                  _searchQuery = '';
-                                });
-                                Navigator.pop(context);
-                              },
-                              child: Text('Clear'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('Search'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
+              setState(() {
+                _isSearching = !_isSearching;
+                if (!_isSearching) {
+                  _searchController.clear();
+                }
+              });
             },
           ),
           IconButton(
@@ -104,16 +87,24 @@ class _HomeState extends State<BudgetScreen> {
             );
           }
           List<Budgets> budgets = snapshot.data!;
+          if (_isSearching) {
+            final query = _searchController.text.toLowerCase();
+            budgets = budgets.where((budget) {
+              final title = budget.reason.toLowerCase();
+              final description = budget.amount.toLowerCase();
+              return title.contains(query) || description.contains(query);
+            }).toList();
+          }
           return ListView.builder(
             itemCount: budgets.length,
             itemBuilder: (context, index) {
               final budget = budgets[index];
-              if (_searchQuery.isNotEmpty &&
-                  !budget.reason
-                      .toLowerCase()
-                      .contains(_searchQuery.toLowerCase())) {
-                return Container();
-              }
+              // if (_searchQuery.isNotEmpty &&
+              //     !budget.reason
+              //         .toLowerCase()
+              //         .contains(_searchQuery.toLowerCase())) {
+              //   return Container();
+              // }
               return Card(
                 child: ListTile(
                   title: Text(budget.reason),
