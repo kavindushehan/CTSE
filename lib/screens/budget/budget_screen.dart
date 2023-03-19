@@ -114,31 +114,31 @@ class _HomeState extends State<BudgetScreen> {
                       .contains(_searchQuery.toLowerCase())) {
                 return Container();
               }
-              return Slidable(
-                  actionPane: SlidableDrawerActionPane(),
-                  actionExtentRatio: 0.25,
-                  child: ListTile(
-                    title: Text(budget.reason),
-                    subtitle: Text(budget.amount),
+              return Card(
+                child: ListTile(
+                  title: Text(budget.reason),
+                  subtitle: Text(budget.amount),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        color: Colors.blue,
+                        onPressed: () {
+                          _showEditBudgetDialog(context, budget);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Colors.red,
+                        onPressed: () {
+                          _budgetsService.deleteBudgets(budget.id);
+                        },
+                      ),
+                    ],
                   ),
-                  actions: [
-                    IconSlideAction(
-                      caption: 'Edit',
-                      color: Colors.blue,
-                      icon: Icons.edit,
-                      onTap: () {
-                        _showEditBudgetDialog(context, budget);
-                      },
-                    ),
-                    IconSlideAction(
-                      caption: 'Delete',
-                      color: Colors.red,
-                      icon: Icons.delete,
-                      onTap: () {
-                        _budgetsService.deleteBudgets(budget.id);
-                      },
-                    ),
-                  ]);
+                ),
+              );
             },
           );
         },
