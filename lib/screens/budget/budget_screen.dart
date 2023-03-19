@@ -95,16 +95,18 @@ class _HomeState extends State<BudgetScreen> {
               return title.contains(query) || description.contains(query);
             }).toList();
           }
+          List<Budgets> getCompletedBudgets(List<Budgets> budgets) {
+            return budgets.where((budget) => budget.isCompleted).toList();
+          }
+
+          List<Budgets> getNonCompletedBudgets(List<Budgets> budgets) {
+            return budgets.where((budget) => !budget.isCompleted).toList();
+          }
+
           return ListView.builder(
             itemCount: budgets.length,
             itemBuilder: (context, index) {
               final budget = budgets[index];
-              // if (_searchQuery.isNotEmpty &&
-              //     !budget.reason
-              //         .toLowerCase()
-              //         .contains(_searchQuery.toLowerCase())) {
-              //   return Container();
-              // }
               return Card(
                 child: ListTile(
                   title: Text(budget.reason),
@@ -112,6 +114,15 @@ class _HomeState extends State<BudgetScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Checkbox(
+                        value: budget.isCompleted,
+                        onChanged: (value) {
+                          setState(() {
+                            budget.isCompleted = value!;
+                            _budgetsService.updateBudgets(budget);
+                          });
+                        },
+                      ),
                       IconButton(
                         icon: Icon(Icons.edit),
                         color: Colors.blue,
@@ -170,7 +181,7 @@ class _HomeState extends State<BudgetScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
@@ -179,7 +190,7 @@ class _HomeState extends State<BudgetScreen> {
                 _budgetsService.updateBudgets(budget);
                 Navigator.pop(context);
               },
-              child: Text("Save"),
+              child: const Text("Save"),
             ),
           ],
         );
