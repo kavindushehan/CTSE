@@ -139,8 +139,8 @@ class _HomeState extends State<BudgetScreen> {
             final query = _searchController.text.toLowerCase();
             budgets = budgets.where((budget) {
               final title = budget.reason.toLowerCase();
-              final description = budget.amount.toLowerCase();
-              return title.contains(query) || description.contains(query);
+              final amount = budget.amount.toLowerCase();
+              return title.contains(query) || amount.contains(query);
             }).toList();
           }
 
