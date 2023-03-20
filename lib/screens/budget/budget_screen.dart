@@ -267,6 +267,7 @@ class _HomeState extends State<BudgetScreen> {
         TextEditingController(text: budget.reason);
     final TextEditingController amountController =
         TextEditingController(text: budget.amount);
+    DateTime selectedDate = budget.dateTime;
 
     showDialog(
       context: context,
@@ -288,6 +289,59 @@ class _HomeState extends State<BudgetScreen> {
                   labelText: "Amount",
                 ),
               ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Date:"),
+                  TextButton(
+                    onPressed: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null && picked != selectedDate)
+                        setState(() {
+                          selectedDate = picked;
+                        });
+                    },
+                    child: Text(
+                      "${selectedDate.toLocal().toString().substring(0, 10)}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Time:"),
+                  TextButton(
+                    onPressed: () async {
+                      final TimeOfDay? picked = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(selectedDate),
+                      );
+                      if (picked != null)
+                        setState(() {
+                          selectedDate = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            picked.hour,
+                            picked.minute,
+                          );
+                        });
+                    },
+                    child: Text(
+                      "${selectedDate.toLocal().toString().substring(10, 16)}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
           actions: [
@@ -301,6 +355,7 @@ class _HomeState extends State<BudgetScreen> {
               onPressed: () {
                 budget.reason = reasonController.text;
                 budget.amount = amountController.text;
+                budget.dateTime = selectedDate;
                 _budgetsService.updateBudgets(budget);
                 Navigator.pop(context);
               },
