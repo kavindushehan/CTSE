@@ -265,10 +265,9 @@ class _HomeState extends State<BudgetScreen> {
   void _showEditBudgetDialog(BuildContext context, Budgets budget) {
     final TextEditingController reasonController =
         TextEditingController(text: budget.reason);
-    final TextEditingController amountController =
-        TextEditingController(text: budget.amount);
+    final TextEditingController amountController = TextEditingController(
+        text: budget.amount.toString()); // convert to string
     DateTime selectedDate = budget.dateTime;
-
     showDialog(
       context: context,
       builder: (context) {
@@ -288,6 +287,9 @@ class _HomeState extends State<BudgetScreen> {
                 decoration: InputDecoration(
                   labelText: "Amount",
                 ),
+                keyboardType: TextInputType.numberWithOptions(
+                    decimal:
+                        true), // set keyboard type to allow decimal numbers
               ),
               const SizedBox(height: 16),
               Row(
@@ -354,7 +356,7 @@ class _HomeState extends State<BudgetScreen> {
             TextButton(
               onPressed: () {
                 budget.reason = reasonController.text;
-                budget.amount = amountController.text;
+                budget.amount = amountController.text; // convert to double
                 budget.dateTime = selectedDate;
                 _budgetsService.updateBudgets(budget);
                 Navigator.pop(context);
