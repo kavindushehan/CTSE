@@ -19,11 +19,23 @@ class _RegisterState extends State<Register> {
   bool _obsecureText = true;
 
   final registrationFormUser = GlobalKey<FormState>();
+
+  //Declaring text editing controllers
   final TextEditingController firstName = TextEditingController();
   final TextEditingController lastName = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController pass = TextEditingController();
   final TextEditingController confirmPass = TextEditingController();
+
+   // Initial Selected Value
+  String dropdownvalue = 'Male';   
+  
+  // List of items in our dropdown menu
+  var items = [    
+    'Male',
+    'Female',
+    'Other',
+  ];
 
   @override
   Widget build(BuildContext context) => isLoading
@@ -40,7 +52,7 @@ class _RegisterState extends State<Register> {
                 child: Wrap(
                   children: <Widget>[
                     const Padding(
-                      padding: EdgeInsets.fromLTRB(0.0, 30.0, 0.0, 10.0),
+                      padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       child: Center(
                         child: Text(
                           'Register',
@@ -54,8 +66,8 @@ class _RegisterState extends State<Register> {
                     ),
                     const Center(
                       child: Image(
-                        width: 250,
-                        height: 250,
+                        width: 200,
+                        height: 200,
                         image: AssetImage('assets/signup.png'),
                       ),
                     ),
@@ -94,6 +106,21 @@ class _RegisterState extends State<Register> {
                                 return 'Please enter a valid name';
                               }
                               return null;
+                            },
+                          ),
+                          DropdownButton(
+                            value: dropdownvalue,
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            items: items.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownvalue = newValue!;
+                              });
                             },
                           ),
                           TextFormField(
@@ -189,6 +216,7 @@ class _RegisterState extends State<Register> {
                                     dynamic result = await auth.registerUser(
                                         firstName.text,
                                         lastName.text,
+                                        dropdownvalue,
                                         email.text,
                                         pass.text);
                                     print(result);
@@ -219,15 +247,14 @@ class _RegisterState extends State<Register> {
                                         content: Text(result),
                                       ));
                                     }
-                                  }else{
+                                  } else {
                                     setState(() {
-                                        isLoading = false;
-                                      });
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            'Please check the fields'),
-                                      ));
+                                      isLoading = false;
+                                    });
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text('Please check the fields'),
+                                    ));
                                   }
                                 },
                               )),
@@ -238,5 +265,3 @@ class _RegisterState extends State<Register> {
                 )),
           ));
 }
-
-

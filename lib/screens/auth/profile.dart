@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
-import 'package:ctse_app/models/userLog.dart';
 import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/home.dart';
 import 'package:ctse_app/screens/auth/userLog.dart';
@@ -18,7 +17,7 @@ import '../../widgets/circleAvatar.dart';
 import '../../widgets/loading.dart';
 
 class MyProfile extends StatefulWidget {
-  const MyProfile({super.key});
+  const MyProfile({Key? key}) : super(key: key);
 
   @override
   State<MyProfile> createState() => _MyProfileState();
@@ -36,12 +35,22 @@ class _MyProfileState extends State<MyProfile> {
   late dynamic result = 'Email';
 
   final updateUserForm = GlobalKey<FormState>();
+  
 
   String? img = '';
 
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+
+  // Initial Selected Value
+  late String dropdownvalue ;
+  // List of items in our dropdown menu
+  var items = [
+    'Male',
+    'Female',
+    'Other',
+  ];
 
   @override
   void initState() {
@@ -71,16 +80,14 @@ class _MyProfileState extends State<MyProfile> {
                   MaterialPageRoute(builder: (context) => const Main())),
             ),
             actions: [
-          IconButton(
-            icon: const Icon(Icons.add_to_home_screen),
-            onPressed: () {
-               Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => const UserLogData()));
-            },
-          ),
-        ],
+              IconButton(
+                icon: const Icon(Icons.add_to_home_screen),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const UserLogData()));
+                },
+              ),
+            ],
           ),
           body: FutureBuilder<UserModel?>(
             future: readUser(UserId),
@@ -128,6 +135,7 @@ class _MyProfileState extends State<MyProfile> {
     firstNameController.text = user.firstName ?? 'First Name';
     lastNameController.text = user.lastName ?? 'Last Name';
     emailController.text = user.email ?? 'Email';
+    dropdownvalue = user.gender ?? 'Other';
 
     return Form(
         key: updateUserForm,
@@ -198,6 +206,24 @@ class _MyProfileState extends State<MyProfile> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 20,),
+                      const Text('Gender *'),
+                   DropdownButtonFormField(
+                        value: dropdownvalue,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: items.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(items),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          print(newValue);
+                          setState(() {
+                            dropdownvalue = newValue!;
+                          });
+                        },
+                      ),
                   TextFormField(
                     controller: emailController,
                     decoration: const InputDecoration(
@@ -226,13 +252,15 @@ class _MyProfileState extends State<MyProfile> {
                           setState(() {
                             isLoading = true;
                           });
+                          print(dropdownvalue);
                           dynamic result = await _auth.updateUser(
                               firstNameController.text,
                               lastNameController.text,
                               emailController.text,
+                              dropdownvalue,
                               img);
                           if (result == 'Success') {
-                            print('User Updated1');
+                            print('User Updated');
                             setState(() {
                               isLoading = false;
                             });

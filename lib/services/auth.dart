@@ -12,12 +12,13 @@ class AuthService {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   var uuid = Uuid();
 
-  Future registerUser(firstName, lastName, email, password) async {
+  Future registerUser(firstName, lastName, gender, email, password) async {
     try {
       UserModel userModel = UserModel();
 
       userModel.firstName = firstName;
       userModel.lastName = lastName;
+      userModel.gender = gender;
       userModel.email = email;
 
       await _auth
@@ -182,7 +183,7 @@ class AuthService {
 
   //Update firestore data
   Future updateUser(
-      firstNameUpdated, lastNameUpdated, emailUpdated, image) async {
+      firstNameUpdated, lastNameUpdated, emailUpdated, dropdownValue, image) async {
     try {
       if (image != null) {
         await _auth.currentUser?.updatePhotoURL(image);
@@ -198,6 +199,7 @@ class AuthService {
         'firstName': firstNameUpdated,
         'lastName': lastNameUpdated,
         'email': emailUpdated,
+        'gender': dropdownValue
       });
       return 'Success';
     } catch (e) {

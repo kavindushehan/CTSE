@@ -3,8 +3,6 @@ import 'package:ctse_app/models/userLog.dart';
 import 'package:ctse_app/services/userLogService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class UserLogData extends StatefulWidget {
   const UserLogData({super.key});
