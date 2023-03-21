@@ -4,12 +4,15 @@ import 'package:ctse_app/models/user.dart';
 import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/home.dart';
 import 'package:ctse_app/services/auth.dart';
+
 import 'package:ctse_app/services/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../widgets/circleAvatar.dart';
 import '../../widgets/loading.dart';
 
 class MyProfile extends StatefulWidget {
@@ -34,6 +37,7 @@ class _MyProfileState extends State<MyProfile> {
 
   File? _image;
   final _picker = ImagePicker();
+  String? img ='';
 
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -46,6 +50,11 @@ class _MyProfileState extends State<MyProfile> {
 
     setState(() {
       UserId = result!;
+      if (auth.currentUser?.photoURL != null) {
+
+        print(auth.currentUser?.photoURL);
+        img = auth.currentUser?.photoURL;
+      }
       isLoading = false;
     });
     super.initState();
@@ -92,9 +101,12 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery); 
+    final ref = FirebaseStorage.instance.ref('/profile').child('images/$result');
+    await ref.putFile(File(image!.path));
+    final uploadedPhotoUrl = await ref.getDownloadURL();
     setState(() {
-      _image = pickedFile != null ? File(pickedFile.path) : null;
+      img = uploadedPhotoUrl;
     });
   }
 
@@ -123,14 +135,16 @@ class _MyProfileState extends State<MyProfile> {
                           onTap: _pickImage,
                           child: Column(
                             children: [
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundImage:
-                                    _image != null ? FileImage(_image!) : null,
-                                child: _image == null
-                                    ? const Text('Add Photo')
-                                    : null,
-                              ),
+                              Container(
+                                   height: 100.0,
+                                  width: 100.0,
+                                   child: img =='' ?  const Icon(Icons.account_circle_rounded,
+                                   size: 80,)
+                                   :
+                                   CustomCircleAvatar(
+                                     myImage: NetworkImage(img!),
+                                   )
+                                 ),
                               const SizedBox(height: 10),
                               const Text('Upload Image'),
                             ],
@@ -202,7 +216,7 @@ class _MyProfileState extends State<MyProfile> {
                               firstNameController.text,
                               lastNameController.text,
                               emailController.text,
-                              _image);
+                              img);
                           if (result == 'Success') {
                             setState(() {
                               isLoading = false;
@@ -291,4 +305,3 @@ class _MyProfileState extends State<MyProfile> {
         ));
   }
 }
-

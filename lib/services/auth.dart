@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -154,11 +155,7 @@ class AuthService {
       firstNameUpdated, lastNameUpdated, emailUpdated, image) async {
     try {
       if (image != null) {
-        final fileName = basename(image!.path);
-        final ref = _fireStorage.ref('/profile').child('images/$fileName');
-        await ref.putFile(image!);
-        final photoURL = await ref.getDownloadURL();
-        await _auth.currentUser?.updatePhotoURL(photoURL);
+        await _auth.currentUser?.updatePhotoURL(image);
       }
 
       await _auth.currentUser?.updateEmail(emailUpdated);
@@ -177,4 +174,6 @@ class AuthService {
       return e.toString();
     }
   }
+
+  
 }
