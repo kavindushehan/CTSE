@@ -203,6 +203,7 @@ class _RegisterState extends State<Register> {
                                             'Successfully Created Account'),
                                         backgroundColor: Colors.blue,
                                       ));
+                                      // ignore: use_build_context_synchronously
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -212,6 +213,7 @@ class _RegisterState extends State<Register> {
                                       setState(() {
                                         isLoading = false;
                                       });
+                                      // ignore: use_build_context_synchronously
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
                                         content: Text(result),

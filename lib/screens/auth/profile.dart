@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
+import 'package:ctse_app/models/userLog.dart';
 import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/home.dart';
+import 'package:ctse_app/screens/auth/userLog.dart';
 import 'package:ctse_app/services/auth.dart';
 
 import 'package:ctse_app/services/validators.dart';
@@ -68,6 +70,17 @@ class _MyProfileState extends State<MyProfile> {
               onPressed: () => Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const Main())),
             ),
+            actions: [
+          IconButton(
+            icon: const Icon(Icons.add_to_home_screen),
+            onPressed: () {
+               Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => const UserLogData()));
+            },
+          ),
+        ],
           ),
           body: FutureBuilder<UserModel?>(
             future: readUser(UserId),
@@ -229,17 +242,18 @@ class _MyProfileState extends State<MyProfile> {
                               duration: Duration(seconds: 2),
                               backgroundColor: Colors.blue,
                             ));
+                            // ignore: use_build_context_synchronously
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const Main()));
-                            print('User Updated2');
                           } else {
                             setState(() {
                               isLoading = false;
                             });
+                            // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: new Text(result),
+                              content: Text(result),
                             ));
                           }
                           setState(() {

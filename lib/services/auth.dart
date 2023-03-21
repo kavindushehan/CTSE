@@ -1,14 +1,16 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
+import 'package:ctse_app/models/userLog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
+
+
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  final FirebaseStorage _fireStorage = FirebaseStorage.instance;
+  var uuid = Uuid();
 
   Future registerUser(firstName, lastName, email, password) async {
     try {
@@ -28,7 +30,6 @@ class AuthService {
         if (user != null) {
           await user.updateDisplayName(firstName + " " + lastName);
           userModel.uid = user.uid;
-          // other user model fields can be set here too
         }
       });
 
@@ -55,6 +56,10 @@ class AuthService {
 
   //Sign in with email and password
   Future signInEmail(formEmail, formPassword) async {
+
+    UserLog userLog = UserLog();
+
+
     if (_auth.currentUser != null) {
       return 'User already Signed In in to the System';
     } else {
@@ -62,6 +67,24 @@ class AuthService {
         UserCredential result = await _auth.signInWithEmailAndPassword(
             email: formEmail, password: formPassword);
         print(result);
+
+        DateTime today = DateTime.now();
+        String nowTime = "$today";
+        String dateStr = "${today.year}-${today.month}-${today.day}";
+        String hourStr = "${today.hour}";
+        String minuteStr = "${today.minute}";
+
+        userLog.date = dateStr;
+        userLog.hour = hourStr;
+        userLog.minute = minuteStr;
+        
+        await _fireStore
+        .collection('userData')
+        .doc(_auth.currentUser?.uid)
+        .collection('userLog')
+        .doc(nowTime)
+        .set(userLog.toMap());
+
         return 'Success';
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -87,7 +110,10 @@ class AuthService {
 
   //Sign out
   Future signOut() async {
+
+
     try {
+
       await _auth.signOut();
       return 'Success';
     } catch (e) {
