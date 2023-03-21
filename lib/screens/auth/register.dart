@@ -217,6 +217,10 @@ class _RegisterState extends State<Register> {
                                         content: Text(result),
                                       ));
                                     }
+                                  }else{
+                                    setState(() {
+                                        isLoading = false;
+                                      });
                                   }
                                 },
                               )),
