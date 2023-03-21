@@ -268,9 +268,8 @@ class _HomeState extends State<BudgetScreen> {
   void _showEditBudgetDialog(BuildContext context, Budgets budget) {
     final TextEditingController reasonController =
         TextEditingController(text: budget.reason);
-    final TextEditingController amountController = TextEditingController(
-        text: budget.amount.toString()); // convert to string
-    // DateTime selectedDate = budget.dateTime;
+    final TextEditingController amountController =
+        TextEditingController(text: budget.amount.toString());
     DateTime selectedDate = DateTime.now();
 
     showDialog(
