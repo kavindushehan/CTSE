@@ -4,6 +4,7 @@ import 'package:ctse_app/services/budgetService.dart';
 import 'package:ctse_app/widgets/sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({Key? key}) : super(key: key);
@@ -246,6 +247,8 @@ class _HomeState extends State<BudgetScreen> {
                             color: Colors.red,
                             onPressed: () {
                               _budgetsService.deleteBudgets(budget.id);
+                              Fluttertoast.showToast(
+                                  msg: "Budget deleted successfully");
                             },
                           ),
                         ],
@@ -268,6 +271,7 @@ class _HomeState extends State<BudgetScreen> {
     final TextEditingController amountController = TextEditingController(
         text: budget.amount.toString()); // convert to string
     DateTime selectedDate = budget.dateTime;
+
     showDialog(
       context: context,
       builder: (context) {
@@ -360,6 +364,7 @@ class _HomeState extends State<BudgetScreen> {
                 budget.dateTime = selectedDate;
                 _budgetsService.updateBudgets(budget);
                 Navigator.pop(context);
+                Fluttertoast.showToast(msg: "Budget updated successfully");
               },
               child: const Text("Save"),
             ),
