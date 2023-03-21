@@ -34,8 +34,8 @@ class _MyProfileState extends State<MyProfile> {
   late dynamic result = 'Email';
 
   final updateUserForm = GlobalKey<FormState>();
-  
-  String? img ='';
+
+  String? img = '';
 
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -65,8 +65,8 @@ class _MyProfileState extends State<MyProfile> {
             title: const Text('Profile'),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => const Main())),
+              onPressed: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const Main())),
             ),
           ),
           body: FutureBuilder<UserModel?>(
@@ -97,12 +97,17 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Future<void> _pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery); 
-    final ref = FirebaseStorage.instance.ref('/profile').child('images/$result');
+    setState(() {
+      isLoading = true;
+    });
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final ref =
+        FirebaseStorage.instance.ref('/profile').child('images/$result');
     await ref.putFile(File(image!.path));
     final uploadedPhotoUrl = await ref.getDownloadURL();
     setState(() {
       img = uploadedPhotoUrl;
+      isLoading = false;
     });
   }
 
@@ -132,15 +137,16 @@ class _MyProfileState extends State<MyProfile> {
                           child: Column(
                             children: [
                               SizedBox(
-                                   height: 100.0,
+                                  height: 100.0,
                                   width: 100.0,
-                                   child: img =='' ?  const Icon(Icons.account_circle_rounded,
-                                   size: 80,)
-                                   :
-                                   CustomCircleAvatar(
-                                     myImage: NetworkImage(img!),
-                                   )
-                                 ),
+                                  child: img == ''
+                                      ? const Icon(
+                                          Icons.account_circle_rounded,
+                                          size: 80,
+                                        )
+                                      : CustomCircleAvatar(
+                                          myImage: NetworkImage(img!),
+                                        )),
                               const SizedBox(height: 10),
                               const Text('Upload Image'),
                             ],
@@ -200,8 +206,7 @@ class _MyProfileState extends State<MyProfile> {
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(
-                              40), 
+                          minimumSize: const Size.fromHeight(40),
                         ),
                         child: const Text('Update Profile'),
                         onPressed: () async {
@@ -218,7 +223,8 @@ class _MyProfileState extends State<MyProfile> {
                             setState(() {
                               isLoading = false;
                             });
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
                               content: Text('User Updated'),
                               duration: Duration(seconds: 2),
                               backgroundColor: Colors.blue,
@@ -227,7 +233,7 @@ class _MyProfileState extends State<MyProfile> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const Main()));
-                                    print('User Updated2');
+                            print('User Updated2');
                           } else {
                             setState(() {
                               isLoading = false;
@@ -247,8 +253,7 @@ class _MyProfileState extends State<MyProfile> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
-                          minimumSize: const Size.fromHeight(
-                              40), 
+                          minimumSize: const Size.fromHeight(40),
                         ),
                         child: const Text('Delete Account'),
                         onPressed: () async {
@@ -280,7 +285,7 @@ class _MyProfileState extends State<MyProfile> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) => EmailSignin()));
-                                              ScaffoldMessenger.of(context)
+                                      ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
                                         content: Text(
                                             'Successfully Deleted Account'),
@@ -293,14 +298,14 @@ class _MyProfileState extends State<MyProfile> {
                                       });
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            'Error with Deleting Account'),
+                                        content:
+                                            Text('Error with Deleting Account'),
                                       ));
                                     }
 
-                                      setState(() {
-                                        isLoading = false;
-                                      });
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                   },
                                   child: const Text(
                                     'Delete',
