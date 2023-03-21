@@ -201,7 +201,7 @@ class _MyProfileState extends State<MyProfile> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(
-                              40), // fromHeight use double.infinity as width and 40 is the height
+                              40), 
                         ),
                         child: const Text('Update Profile'),
                         onPressed: () async {
@@ -214,17 +214,20 @@ class _MyProfileState extends State<MyProfile> {
                               emailController.text,
                               img);
                           if (result == 'Success') {
+                            print('User Updated1');
                             setState(() {
                               isLoading = false;
                             });
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: new Text(result),
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                              content: Text('User Updated'),
+                              duration: Duration(seconds: 2),
                               backgroundColor: Colors.blue,
                             ));
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const Main()));
+                                    print('User Updated2');
                           } else {
                             setState(() {
                               isLoading = false;
@@ -277,12 +280,22 @@ class _MyProfileState extends State<MyProfile> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) => EmailSignin()));
+                                              ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text(
+                                            'Successfully Deleted Account'),
+                                      ));
                                     } else {
                                       print('Error');
 
                                       setState(() {
                                         isLoading = false;
                                       });
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text(
+                                            'Error with Deleting Account'),
+                                      ));
                                     }
 
                                       setState(() {
