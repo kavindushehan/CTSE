@@ -270,7 +270,8 @@ class _HomeState extends State<BudgetScreen> {
         TextEditingController(text: budget.reason);
     final TextEditingController amountController = TextEditingController(
         text: budget.amount.toString()); // convert to string
-    DateTime selectedDate = budget.dateTime;
+    // DateTime selectedDate = budget.dateTime;
+    DateTime selectedDate = DateTime.now();
 
     showDialog(
       context: context,
@@ -305,13 +306,18 @@ class _HomeState extends State<BudgetScreen> {
                       final DateTime? picked = await showDatePicker(
                         context: context,
                         initialDate: selectedDate,
-                        firstDate: DateTime.now(),
+                        firstDate: DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day -
+                                1), // set firstDate to the day before the selectedDate
                         lastDate: DateTime(2100),
                       );
-                      if (picked != null && picked != selectedDate)
+                      if (picked != null && picked != selectedDate) {
                         setState(() {
                           selectedDate = picked;
                         });
+                      }
                     },
                     child: Text(
                       "${selectedDate.toLocal().toString().substring(0, 10)}",
