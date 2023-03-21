@@ -98,11 +98,15 @@ class AuthService {
   //Delete user from the firebase
   Future deleteUser() async {
     try {
+      String? userid = _auth.currentUser?.uid;
+      await _auth.currentUser!.delete().then((value)async => 
       await _fireStore
           .collection('userData')
-          .doc(_auth.currentUser?.uid)
-          .delete();
-      await _auth.currentUser!.delete();
+          .doc(userid)
+          .delete()
+          );
+      
+      
       return 'Success';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {

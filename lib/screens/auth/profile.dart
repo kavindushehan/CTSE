@@ -34,9 +34,7 @@ class _MyProfileState extends State<MyProfile> {
   late dynamic result = 'Email';
 
   final updateUserForm = GlobalKey<FormState>();
-
-  File? _image;
-  final _picker = ImagePicker();
+  
   String? img ='';
 
   final TextEditingController firstNameController = TextEditingController();
@@ -51,8 +49,6 @@ class _MyProfileState extends State<MyProfile> {
     setState(() {
       UserId = result!;
       if (auth.currentUser?.photoURL != null) {
-
-        print(auth.currentUser?.photoURL);
         img = auth.currentUser?.photoURL;
       }
       isLoading = false;
@@ -135,7 +131,7 @@ class _MyProfileState extends State<MyProfile> {
                           onTap: _pickImage,
                           child: Column(
                             children: [
-                              Container(
+                              SizedBox(
                                    height: 100.0,
                                   width: 100.0,
                                    child: img =='' ?  const Icon(Icons.account_circle_rounded,
@@ -282,11 +278,16 @@ class _MyProfileState extends State<MyProfile> {
                                           MaterialPageRoute(
                                               builder: (_) => EmailSignin()));
                                     } else {
+                                      print('Error');
+
                                       setState(() {
                                         isLoading = false;
                                       });
-                                      print('Error');
                                     }
+
+                                      setState(() {
+                                        isLoading = false;
+                                      });
                                   },
                                   child: const Text(
                                     'Delete',
