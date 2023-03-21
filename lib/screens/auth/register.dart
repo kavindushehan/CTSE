@@ -221,6 +221,11 @@ class _RegisterState extends State<Register> {
                                     setState(() {
                                         isLoading = false;
                                       });
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text(
+                                            'Please check the fields'),
+                                      ));
                                   }
                                 },
                               )),
