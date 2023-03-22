@@ -50,7 +50,7 @@ class _HomeState extends State<BudgetScreen> {
                 },
               )
             : const Text("Budgets"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple.shade900,
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.cancel : Icons.search),
