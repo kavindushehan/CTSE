@@ -7,6 +7,7 @@ class AboutUsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.purple.shade900,
         title: Text('About Us'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -23,8 +24,8 @@ class AboutUsPage extends StatelessWidget {
             SizedBox(height: 20.0),
             Image.asset(
               'assets/change.jpg',
-              height: 150.0,
-              width: 150.0,
+              height: 200.0,
+              width: 200.0,
             ),
             SizedBox(height: 30.0),
             Text(
@@ -44,28 +45,28 @@ class AboutUsPage extends StatelessWidget {
             ),
             SizedBox(height: 30.0),
             Text(
-              '- De Silva G.K.S it20076566',
+              'De Silva G.K.S - IT20076566',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
               ),
             ),
             Text(
-              '- Perera K.A.P.M it20152864',
+              'Perera K.A.P.M - IT20152864',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
               ),
             ),
             Text(
-              '- Diunugala M W it20233358',
+              'Diunugala M.W - IT20233358',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
               ),
             ),
             Text(
-              '- Ariyarathna H.M.M.M. it20120634',
+              'Ariyarathna H.M.M.M - IT20120634',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
