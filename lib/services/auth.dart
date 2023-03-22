@@ -1,20 +1,24 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
+import 'package:ctse_app/models/userLog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
+
+
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  final FirebaseStorage _fireStorage = FirebaseStorage.instance;
+  var uuid = Uuid();
 
-  Future registerUser(firstName, lastName, email, password) async {
+  Future registerUser(firstName, lastName, gender, email, password) async {
     try {
       UserModel userModel = UserModel();
 
       userModel.firstName = firstName;
       userModel.lastName = lastName;
+      userModel.gender = gender;
       userModel.email = email;
 
       await _auth
@@ -27,7 +31,6 @@ class AuthService {
         if (user != null) {
           await user.updateDisplayName(firstName + " " + lastName);
           userModel.uid = user.uid;
-          // other user model fields can be set here too
         }
       });
 
@@ -54,13 +57,35 @@ class AuthService {
 
   //Sign in with email and password
   Future signInEmail(formEmail, formPassword) async {
+
+    UserLog userLog = UserLog();
+
+
     if (_auth.currentUser != null) {
       return 'User already Signed In in to the System';
     } else {
       try {
         UserCredential result = await _auth.signInWithEmailAndPassword(
             email: formEmail, password: formPassword);
-        print(result);
+
+
+        DateTime today = DateTime.now();
+        String nowTime = "$today";
+        String dateStr = "${today.year}-${today.month}-${today.day}";
+        String hourStr = "${today.hour}";
+        String minuteStr = "${today.minute}";
+
+        userLog.date = dateStr;
+        userLog.hour = hourStr;
+        userLog.minute = minuteStr;
+        
+        await _fireStore
+        .collection('userData')
+        .doc(_auth.currentUser?.uid)
+        .collection('userLog')
+        .doc(nowTime)
+        .set(userLog.toMap());
+
         return 'Success';
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -86,7 +111,10 @@ class AuthService {
 
   //Sign out
   Future signOut() async {
+
+
     try {
+
       await _auth.signOut();
       return 'Success';
     } catch (e) {
@@ -97,11 +125,15 @@ class AuthService {
   //Delete user from the firebase
   Future deleteUser() async {
     try {
+      String? userid = _auth.currentUser?.uid;
+      await _auth.currentUser!.delete().then((value)async => 
       await _fireStore
           .collection('userData')
-          .doc(_auth.currentUser?.uid)
-          .delete();
-      await _auth.currentUser!.delete();
+          .doc(userid)
+          .delete()
+          );
+      
+      
       return 'Success';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {
@@ -151,14 +183,10 @@ class AuthService {
 
   //Update firestore data
   Future updateUser(
-      firstNameUpdated, lastNameUpdated, emailUpdated, image) async {
+      firstNameUpdated, lastNameUpdated, emailUpdated,dropdownval, image) async {
     try {
       if (image != null) {
-        final fileName = basename(image!.path);
-        final ref = _fireStorage.ref('/profile').child('images/$fileName');
-        await ref.putFile(image!);
-        final photoURL = await ref.getDownloadURL();
-        await _auth.currentUser?.updatePhotoURL(photoURL);
+        await _auth.currentUser?.updatePhotoURL(image);
       }
 
       await _auth.currentUser?.updateEmail(emailUpdated);
@@ -171,10 +199,13 @@ class AuthService {
         'firstName': firstNameUpdated,
         'lastName': lastNameUpdated,
         'email': emailUpdated,
+        'gender':dropdownval
       });
       return 'Success';
     } catch (e) {
       return e.toString();
     }
   }
+
+  
 }
