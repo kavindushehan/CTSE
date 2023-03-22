@@ -6,7 +6,7 @@ import '../../models/todo.dart';
 class AddTodoModal extends StatefulWidget {
   final Function(Todos) onTodoAdded;
 
-  AddTodoModal({required this.onTodoAdded});
+  const AddTodoModal({required this.onTodoAdded});
 
   @override
   _AddTodoModalState createState() => _AddTodoModalState();
@@ -15,7 +15,9 @@ class AddTodoModal extends StatefulWidget {
 class _AddTodoModalState extends State<AddTodoModal> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _subTaskController = TextEditingController();
+  final List<String> _priorities = ['High', 'Medium', 'Low'];
+  String _selectedPriority = 'Low';
 
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
@@ -23,7 +25,7 @@ class _AddTodoModalState extends State<AddTodoModal> {
   @override
   void dispose() {
     _titleController.dispose();
-    _descriptionController.dispose();
+    _subTaskController.dispose();
     super.dispose();
   }
 
@@ -32,7 +34,7 @@ class _AddTodoModalState extends State<AddTodoModal> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (pickedDate != null) {
       final pickedTime = await showTimePicker(
@@ -45,6 +47,17 @@ class _AddTodoModalState extends State<AddTodoModal> {
           _selectedTime = pickedTime;
         });
       }
+    }
+  }
+
+  Color _getColorForPriority(String priority) {
+    // return color based on priority
+    if (priority == 'High') {
+      return Colors.red;
+    } else if (priority == 'Medium') {
+      return Colors.orange;
+    } else {
+      return Colors.green;
     }
   }
 
@@ -86,10 +99,9 @@ class _AddTodoModalState extends State<AddTodoModal> {
                   ),
                   const SizedBox(height: 16.0),
                   TextFormField(
-                    controller: _descriptionController,
-                    maxLines: 5,
+                    controller: _subTaskController,
                     decoration: const InputDecoration(
-                      labelText: 'Description',
+                      labelText: 'Sub Task',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -100,17 +112,48 @@ class _AddTodoModalState extends State<AddTodoModal> {
                     },
                   ),
                   const SizedBox(height: 16.0),
+                  DropdownButtonFormField<String>(
+                    value: _selectedPriority,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedPriority = value!;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Priority',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: _priorities
+                        .map((priority) => DropdownMenuItem(
+                            value: priority,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _getColorForPriority(priority),
+                                  ),
+                                ),
+                                Text(priority),
+                              ],
+                            )))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 16.0),
                   InkWell(
                     onTap: () async {
                       await _showDateTimePicker();
                     },
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today),
+                        const Icon(Icons.calendar_today),
                         const SizedBox(width: 8.0),
                         Text(
                           '${_selectedDate.toLocal().toString().substring(0, 10)} ${_selectedTime.format(context)}',
-                          style: TextStyle(fontSize: 16.0),
+                          style: const TextStyle(fontSize: 16.0),
                         ),
                       ],
                     ),
@@ -122,19 +165,18 @@ class _AddTodoModalState extends State<AddTodoModal> {
                         if (_formKey.currentState!.validate()) {
                           String id = const Uuid().v4();
                           String title = _titleController.text.trim();
-                          String description =
-                              _descriptionController.text.trim();
+                          String subTask = _subTaskController.text.trim();
                           Todos todo = Todos(
-                            id: id,
-                            title: title,
-                            description: description,
-                            dateTime: DateTime(
-                                _selectedDate.year,
-                                _selectedDate.month,
-                                _selectedDate.day,
-                                _selectedTime.hour,
-                                _selectedTime.minute),
-                          );
+                              id: id,
+                              title: title,
+                              subTask: subTask,
+                              dateTime: DateTime(
+                                  _selectedDate.year,
+                                  _selectedDate.month,
+                                  _selectedDate.day,
+                                  _selectedTime.hour,
+                                  _selectedTime.minute),
+                              priority: _selectedPriority);
                           await widget.onTodoAdded(todo);
                           Navigator.pop(context);
                         }
