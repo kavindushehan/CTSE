@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/budget.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddBudgetModel extends StatefulWidget {
   final Function(Budgets) onBudgetAdded;
@@ -172,6 +173,15 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                           await widget.onBudgetAdded(budget);
                           Navigator.pop(context);
                         }
+                        Fluttertoast.showToast(
+                          msg: 'Budget added successfully!',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.grey[600],
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
                       },
                       child: Text('Save'),
                     ),
