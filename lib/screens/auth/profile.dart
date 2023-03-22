@@ -72,6 +72,7 @@ class _MyProfileState extends State<MyProfile> {
       : Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.purple.shade900,
             title: const Text('Profile'),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
@@ -143,7 +144,7 @@ class _MyProfileState extends State<MyProfile> {
           updateUserForm.currentState!.save();
         },
         child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0.0, 20, 10.0),
@@ -248,8 +249,7 @@ class _MyProfileState extends State<MyProfile> {
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(
-                              40), 
+                          minimumSize: const Size.fromHeight(40),
                         ),
                         child: const Text('Update Profile'),
                         onPressed: () async {
