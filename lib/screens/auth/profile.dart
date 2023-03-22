@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
 import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/home.dart';
-import 'package:ctse_app/screens/auth/userLog.dart';
+import 'package:ctse_app/screens/auth/userLogData.dart';
 import 'package:ctse_app/services/auth.dart';
 
 import 'package:ctse_app/services/validators.dart';
@@ -17,7 +17,7 @@ import '../../widgets/circleAvatar.dart';
 import '../../widgets/loading.dart';
 
 class MyProfile extends StatefulWidget {
-  const MyProfile({Key? key}) : super(key: key);
+  const MyProfile({super.key});
 
   @override
   State<MyProfile> createState() => _MyProfileState();
@@ -35,22 +35,21 @@ class _MyProfileState extends State<MyProfile> {
   late dynamic result = 'Email';
 
   final updateUserForm = GlobalKey<FormState>();
-  
 
   String? img = '';
-
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-
   // Initial Selected Value
-  late String dropdownvalue ;
+  String dropdownvalue = 'Male';
+  String? dropVal;
   // List of items in our dropdown menu
   var items = [
     'Male',
     'Female',
     'Other',
   ];
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
@@ -141,9 +140,10 @@ class _MyProfileState extends State<MyProfile> {
         key: updateUserForm,
         autovalidateMode: AutovalidateMode.always,
         onChanged: () {
-          Form.of(primaryFocus!.context!).save();
+          updateUserForm.currentState!.save();
         },
-        child: Wrap(
+        child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0.0, 20, 10.0),
@@ -157,7 +157,7 @@ class _MyProfileState extends State<MyProfile> {
                           onTap: _pickImage,
                           child: Column(
                             children: [
-                              SizedBox(
+                              Container(
                                   height: 100.0,
                                   width: 100.0,
                                   child: img == ''
@@ -206,24 +206,27 @@ class _MyProfileState extends State<MyProfile> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20,),
-                      const Text('Gender *'),
-                   DropdownButtonFormField(
-                        value: dropdownvalue,
-                        icon: const Icon(Icons.keyboard_arrow_down),
-                        items: items.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(items),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          print(newValue);
-                          setState(() {
-                            dropdownvalue = newValue!;
-                          });
-                        },
-                      ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text('Gender *'),
+                  DropdownButtonFormField(
+                    value: dropdownvalue,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: items.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      print(newValue);
+                      setState(() {
+                        dropdownvalue = newValue!;
+                        dropVal = newValue;
+                      });
+                    },
+                  ),
                   TextFormField(
                     controller: emailController,
                     decoration: const InputDecoration(
@@ -245,43 +248,34 @@ class _MyProfileState extends State<MyProfile> {
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(40),
+                          minimumSize: const Size.fromHeight(
+                              40), 
                         ),
                         child: const Text('Update Profile'),
                         onPressed: () async {
                           setState(() {
                             isLoading = true;
                           });
-                          print(dropdownvalue);
                           dynamic result = await _auth.updateUser(
                               firstNameController.text,
                               lastNameController.text,
                               emailController.text,
-                              dropdownvalue,
+                              dropVal,
                               img);
                           if (result == 'Success') {
-                            print('User Updated');
                             setState(() {
                               isLoading = false;
                             });
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('User Updated'),
-                              duration: Duration(seconds: 2),
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: new Text("User Data Updated"),
                               backgroundColor: Colors.blue,
                             ));
-                            // ignore: use_build_context_synchronously
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const Main()));
                           } else {
                             setState(() {
                               isLoading = false;
                             });
-                            // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(result),
+                              content: new Text(result),
                             ));
                           }
                           setState(() {
@@ -327,27 +321,12 @@ class _MyProfileState extends State<MyProfile> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (_) => EmailSignin()));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content: Text(
-                                            'Successfully Deleted Account'),
-                                      ));
                                     } else {
-                                      print('Error');
-
                                       setState(() {
                                         isLoading = false;
                                       });
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                        content:
-                                            Text('Error with Deleting Account'),
-                                      ));
+                                      print('Error');
                                     }
-
-                                    setState(() {
-                                      isLoading = false;
-                                    });
                                   },
                                   child: const Text(
                                     'Delete',

@@ -67,7 +67,7 @@ class AuthService {
       try {
         UserCredential result = await _auth.signInWithEmailAndPassword(
             email: formEmail, password: formPassword);
-        print(result);
+
 
         DateTime today = DateTime.now();
         String nowTime = "$today";
@@ -183,7 +183,7 @@ class AuthService {
 
   //Update firestore data
   Future updateUser(
-      firstNameUpdated, lastNameUpdated, emailUpdated, dropdownValue, image) async {
+      firstNameUpdated, lastNameUpdated, emailUpdated,dropdownval, image) async {
     try {
       if (image != null) {
         await _auth.currentUser?.updatePhotoURL(image);
@@ -199,7 +199,7 @@ class AuthService {
         'firstName': firstNameUpdated,
         'lastName': lastNameUpdated,
         'email': emailUpdated,
-        'gender': dropdownValue
+        'gender':dropdownval
       });
       return 'Success';
     } catch (e) {

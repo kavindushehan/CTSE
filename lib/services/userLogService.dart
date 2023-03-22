@@ -26,4 +26,6 @@ class UserLogService {
             snapshot.docs.map((doc) => UserLog.fromMap(doc.data())).toList());
   }
 
+  
+
 }
