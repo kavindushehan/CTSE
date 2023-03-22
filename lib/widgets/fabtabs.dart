@@ -76,7 +76,7 @@ class _FabTabsState extends State<FabTabs> {
         bucket: bucket,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.purple.shade900,
         child: Icon(Icons.add),
         onPressed: () {
           showDialog(
@@ -117,13 +117,15 @@ class _FabTabsState extends State<FabTabs> {
                       children: [
                         Icon(
                           Icons.list,
-                          color: currentIndex == 0 ? Colors.blue : Colors.grey,
+                          color: currentIndex == 0
+                              ? Colors.purple.shade900
+                              : Colors.grey,
                         ),
                         Text(
                           "To-Do",
                           style: TextStyle(
                               color: currentIndex == 0
-                                  ? Colors.blue
+                                  ? Colors.purple.shade900
                                   : Colors.grey),
                         )
                       ],
@@ -143,14 +145,14 @@ class _FabTabsState extends State<FabTabs> {
                         Icon(
                           Icons.note,
                           color: currentIndex == 1
-                              ? Colors.blueAccent
+                              ? Colors.purple.shade900
                               : Colors.grey,
                         ),
                         Text(
                           "Notes",
                           style: TextStyle(
                               color: currentIndex == 1
-                                  ? Colors.blueAccent
+                                  ? Colors.purple.shade900
                                   : Colors.grey),
                         )
                       ],
@@ -174,13 +176,15 @@ class _FabTabsState extends State<FabTabs> {
                       children: [
                         Icon(
                           Icons.wallet,
-                          color: currentIndex == 2 ? Colors.blue : Colors.grey,
+                          color: currentIndex == 2
+                              ? Colors.purple.shade900
+                              : Colors.grey,
                         ),
                         Text(
                           "Budget",
                           style: TextStyle(
                               color: currentIndex == 2
-                                  ? Colors.blue
+                                  ? Colors.purple.shade900
                                   : Colors.grey),
                         )
                       ],
@@ -208,14 +212,14 @@ class _FabTabsState extends State<FabTabs> {
                         Icon(
                           Icons.logout,
                           color: currentIndex == 3
-                              ? Colors.orangeAccent
+                              ? Colors.purple.shade900
                               : Colors.grey,
                         ),
                         Text(
                           "Logout",
                           style: TextStyle(
                               color: currentIndex == 3
-                                  ? Colors.orangeAccent
+                                  ? Colors.purple.shade900
                                   : Colors.grey),
                         )
                       ],
