@@ -1,6 +1,5 @@
 import 'package:ctse_app/widgets/sidemenu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import '../models/todo.dart';
 import '../services/todoService.dart';
 
@@ -14,6 +13,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final TodosService _todosService = TodosService();
   late TextEditingController _searchController;
+  bool _showLow = false;
+  bool _showHigh = false;
+  bool _showMedium = false;
   bool _isSearching = false;
 
   @override
@@ -26,6 +28,17 @@ class _HomeState extends State<Home> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Color _getColor(String priority) {
+    // return color based on priority
+    if (priority == 'High') {
+      return Colors.red;
+    } else if (priority == 'Medium') {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
   }
 
   @override
@@ -45,7 +58,7 @@ class _HomeState extends State<Home> {
                 },
               )
             : const Text("To Do"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple.shade900,
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.cancel : Icons.search),
@@ -58,6 +71,64 @@ class _HomeState extends State<Home> {
               });
             },
           ),
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              setState(() {
+                if (value == 'all') {
+                  _showLow = true;
+                  _showHigh = true;
+                  _showMedium = true;
+                } else {
+                  _showLow = value == 'Low';
+                  _showHigh = value == 'High';
+                  _showMedium = value == 'Medium';
+                }
+              });
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'all',
+                child: Row(
+                  children: [
+                    Icon(Icons.all_inclusive, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Text('All'),
+                  ],
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Low',
+                child: Row(
+                  children: [
+                    Icon(Icons.circle, color: Colors.green),
+                    SizedBox(width: 8),
+                    Text('Low'),
+                  ],
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Medium',
+                child: Row(
+                  children: [
+                    Icon(Icons.circle, color: Colors.orange),
+                    SizedBox(width: 8),
+                    Text('Medium'),
+                  ],
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'High',
+                child: Row(
+                  children: [
+                    Icon(Icons.circle, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text('High'),
+                  ],
+                ),
+              ),
+            ],
+            icon: Icon(Icons.filter_alt, color: Colors.white),
+          )
         ],
       ),
       body: StreamBuilder<List<Todos>>(
@@ -73,68 +144,111 @@ class _HomeState extends State<Home> {
             final query = _searchController.text.toLowerCase();
             todos = todos.where((todo) {
               final title = todo.title.toLowerCase();
-              final description = todo.description.toLowerCase();
+              final description = todo.subTask.toLowerCase();
               return title.contains(query) || description.contains(query);
             }).toList();
           }
+
+          List<Todos> filteredTodos = [];
+
+          if (_showLow && _showMedium && _showHigh) {
+            filteredTodos = todos;
+          } else if (_showLow) {
+            filteredTodos =
+                todos.where((todo) => todo.priority == 'Low').toList();
+          } else if (_showMedium) {
+            filteredTodos =
+                todos.where((todo) => todo.priority == 'Medium').toList();
+          } else if (_showHigh) {
+            filteredTodos =
+                todos.where((todo) => todo.priority == 'High').toList();
+          }
+
           return ListView.builder(
-            itemCount: todos.length,
+            itemCount:
+                filteredTodos.length == 0 ? todos.length : filteredTodos.length,
             itemBuilder: (context, index) {
-              final todo = todos[index];
+              final todo = filteredTodos.length == 0
+                  ? todos[index]
+                  : filteredTodos[index];
               return Card(
                 elevation: 4.0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                color: Colors.yellow.shade300,
+                color: Colors.purple.shade900,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 16.0,
+                            height: 16.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _getColor(todo.priority),
+                            ),
+                          ),
+                        ],
+                      ),
                       Text(
                         todo.title,
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22.0,
-                        ),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.0,
+                            color: Colors.white),
                       ),
                       const SizedBox(height: 8.0),
                       Text(
-                        todo.description,
-                        style: TextStyle(
+                        todo.subTask,
+                        style: const TextStyle(
                           fontSize: 20.0,
-                          color: Colors.grey[600],
+                          color: Colors.white,
                         ),
                       ),
+                      // const SizedBox(height: 8.0),
+                      // Text(
+                      //   todo.priority,
+                      //   style: TextStyle(
+                      //     fontSize: 20.0,
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
                       const SizedBox(height: 8.0),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.date_range,
                             size: 20.0,
-                            color: Colors.grey[600],
+                            color: Colors.white,
                           ),
                           const SizedBox(width: 4.0),
                           Text(
-                            '${todo.dateTime.toLocal().toString().substring(0, 10)}',
-                            style: TextStyle(
+                            todo.dateTime.toLocal().toString().substring(0, 10),
+                            style: const TextStyle(
                               fontSize: 20.0,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                           ),
                           const SizedBox(width: 16.0),
-                          Icon(
+                          const Icon(
                             Icons.access_time,
                             size: 20.0,
-                            color: Colors.grey[600],
+                            color: Colors.white,
                           ),
                           const SizedBox(width: 4.0),
                           Text(
-                            '${todo.dateTime.toLocal().toString().substring(10, 16)}',
-                            style: TextStyle(
+                            todo.dateTime
+                                .toLocal()
+                                .toString()
+                                .substring(10, 16),
+                            style: const TextStyle(
                               fontSize: 20.0,
-                              color: Colors.grey[600],
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -173,12 +287,26 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Color _getColorForPriority(String priority) {
+    // return color based on priority
+    if (priority == 'High') {
+      return Colors.red;
+    } else if (priority == 'Medium') {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
+  }
+
   void _showEditTodoDialog(BuildContext context, Todos todo) {
     final TextEditingController titleController =
         TextEditingController(text: todo.title);
     final TextEditingController descriptionController =
-        TextEditingController(text: todo.description);
+        TextEditingController(text: todo.subTask);
     DateTime selectedDate = todo.dateTime;
+    String selectedPriority = todo.priority;
+
+    List<String> priorities = ['Low', 'Medium', 'High'];
 
     showDialog(
       context: context,
@@ -198,7 +326,7 @@ class _HomeState extends State<Home> {
                 TextField(
                   controller: descriptionController,
                   decoration: const InputDecoration(
-                    labelText: "Description",
+                    labelText: "Sub Task",
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -214,13 +342,14 @@ class _HomeState extends State<Home> {
                           firstDate: DateTime.now(),
                           lastDate: DateTime(2100),
                         );
-                        if (picked != null && picked != selectedDate)
+                        if (picked != null) {
                           setState(() {
                             selectedDate = picked;
                           });
+                        }
                       },
                       child: Text(
-                        "${selectedDate.toLocal().toString().substring(0, 10)}",
+                        selectedDate.toLocal().toString().substring(0, 10),
                         style: const TextStyle(fontSize: 16),
                       ),
                     ),
@@ -236,7 +365,7 @@ class _HomeState extends State<Home> {
                           context: context,
                           initialTime: TimeOfDay.fromDateTime(selectedDate),
                         );
-                        if (picked != null)
+                        if (picked != null) {
                           setState(() {
                             selectedDate = DateTime(
                               selectedDate.year,
@@ -246,11 +375,48 @@ class _HomeState extends State<Home> {
                               picked.minute,
                             );
                           });
+                        }
                       },
                       child: Text(
-                        "${selectedDate.toLocal().toString().substring(10, 16)}",
+                        selectedDate.toLocal().toString().substring(10, 16),
                         style: const TextStyle(fontSize: 16),
                       ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Priority:"),
+                    DropdownButton<String>(
+                      value: selectedPriority,
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedPriority = newValue;
+                          });
+                        }
+                      },
+                      items: priorities
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                margin: const EdgeInsets.only(right: 8),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _getColorForPriority(value),
+                                ),
+                              ),
+                              Text(value),
+                            ],
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
@@ -267,8 +433,9 @@ class _HomeState extends State<Home> {
                     TextButton(
                       onPressed: () {
                         todo.title = titleController.text;
-                        todo.description = descriptionController.text;
+                        todo.subTask = descriptionController.text;
                         todo.dateTime = selectedDate;
+                        todo.priority = selectedPriority;
                         _todosService.updateTodos(todo);
                         Navigator.pop(context);
                       },
