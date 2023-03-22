@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
 import 'package:ctse_app/screens/auth/login.dart';
 import 'package:ctse_app/home.dart';
+import 'package:ctse_app/screens/auth/userLogData.dart';
 import 'package:ctse_app/services/auth.dart';
 
 import 'package:ctse_app/services/validators.dart';
@@ -35,9 +36,16 @@ class _MyProfileState extends State<MyProfile> {
 
   final updateUserForm = GlobalKey<FormState>();
 
-  File? _image;
-  final _picker = ImagePicker();
-  String? img ='';
+  String? img = '';
+  // Initial Selected Value
+  String dropdownvalue = 'Male';
+  String? dropVal;
+  // List of items in our dropdown menu
+  var items = [
+    'Male',
+    'Female',
+    'Other',
+  ];
 
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -51,8 +59,6 @@ class _MyProfileState extends State<MyProfile> {
     setState(() {
       UserId = result!;
       if (auth.currentUser?.photoURL != null) {
-
-        print(auth.currentUser?.photoURL);
         img = auth.currentUser?.photoURL;
       }
       isLoading = false;
@@ -69,9 +75,18 @@ class _MyProfileState extends State<MyProfile> {
             title: const Text('Profile'),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => const Main())),
+              onPressed: () => Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const Main())),
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.add_to_home_screen),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const UserLogData()));
+                },
+              ),
+            ],
           ),
           body: FutureBuilder<UserModel?>(
             future: readUser(UserId),
@@ -101,12 +116,17 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Future<void> _pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery); 
-    final ref = FirebaseStorage.instance.ref('/profile').child('images/$result');
+    setState(() {
+      isLoading = true;
+    });
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final ref =
+        FirebaseStorage.instance.ref('/profile').child('images/$result');
     await ref.putFile(File(image!.path));
     final uploadedPhotoUrl = await ref.getDownloadURL();
     setState(() {
       img = uploadedPhotoUrl;
+      isLoading = false;
     });
   }
 
@@ -114,14 +134,16 @@ class _MyProfileState extends State<MyProfile> {
     firstNameController.text = user.firstName ?? 'First Name';
     lastNameController.text = user.lastName ?? 'Last Name';
     emailController.text = user.email ?? 'Email';
+    dropdownvalue = user.gender ?? 'Other';
 
     return Form(
         key: updateUserForm,
         autovalidateMode: AutovalidateMode.always,
         onChanged: () {
-          Form.of(primaryFocus!.context!).save();
+          updateUserForm.currentState!.save();
         },
-        child: Wrap(
+        child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0.0, 20, 10.0),
@@ -136,15 +158,16 @@ class _MyProfileState extends State<MyProfile> {
                           child: Column(
                             children: [
                               Container(
-                                   height: 100.0,
+                                  height: 100.0,
                                   width: 100.0,
-                                   child: img =='' ?  const Icon(Icons.account_circle_rounded,
-                                   size: 80,)
-                                   :
-                                   CustomCircleAvatar(
-                                     myImage: NetworkImage(img!),
-                                   )
-                                 ),
+                                  child: img == ''
+                                      ? const Icon(
+                                          Icons.account_circle_rounded,
+                                          size: 80,
+                                        )
+                                      : CustomCircleAvatar(
+                                          myImage: NetworkImage(img!),
+                                        )),
                               const SizedBox(height: 10),
                               const Text('Upload Image'),
                             ],
@@ -183,6 +206,27 @@ class _MyProfileState extends State<MyProfile> {
                       return null;
                     },
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text('Gender *'),
+                  DropdownButtonFormField(
+                    value: dropdownvalue,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: items.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      print(newValue);
+                      setState(() {
+                        dropdownvalue = newValue!;
+                        dropVal = newValue;
+                      });
+                    },
+                  ),
                   TextFormField(
                     controller: emailController,
                     decoration: const InputDecoration(
@@ -205,7 +249,7 @@ class _MyProfileState extends State<MyProfile> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(
-                              40), // fromHeight use double.infinity as width and 40 is the height
+                              40), 
                         ),
                         child: const Text('Update Profile'),
                         onPressed: () async {
@@ -216,19 +260,16 @@ class _MyProfileState extends State<MyProfile> {
                               firstNameController.text,
                               lastNameController.text,
                               emailController.text,
+                              dropVal,
                               img);
                           if (result == 'Success') {
                             setState(() {
                               isLoading = false;
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: new Text(result),
+                              content: new Text("User Data Updated"),
                               backgroundColor: Colors.blue,
                             ));
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const Main()));
                           } else {
                             setState(() {
                               isLoading = false;
@@ -248,8 +289,7 @@ class _MyProfileState extends State<MyProfile> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
-                          minimumSize: const Size.fromHeight(
-                              40), 
+                          minimumSize: const Size.fromHeight(40),
                         ),
                         child: const Text('Delete Account'),
                         onPressed: () async {

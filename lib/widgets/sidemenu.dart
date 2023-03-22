@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'fabtabs.dart';
 
 class SideMenu extends StatefulWidget {
@@ -11,6 +10,19 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  String? img='';
+
+  @override
+  void initState() {
+    setState(() {
+      if (auth.currentUser?.photoURL != null) {
+        img = auth.currentUser?.photoURL;
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,10 +36,16 @@ class _SideMenuState extends State<SideMenu> {
           DrawerHeader(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              CircleAvatar(
+              SizedBox(
+                  child: img == ''
+                      ? const Icon(
+                          Icons.account_circle_rounded,
+                          size: 80,
+                        )
+                      : CircleAvatar(
                 radius: 40,
                 backgroundImage: NetworkImage(user?.photoURL ?? ''),
-              ),
+              )),
               const SizedBox(height: 10),
               Text(
                 user?.displayName ?? '',
