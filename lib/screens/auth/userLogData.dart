@@ -10,15 +10,14 @@ class UserLogData extends StatefulWidget {
 }
 
 class _UserLogDataState extends State<UserLogData> {
-
   final UserLogService userLogService = UserLogService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Sign In Log"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple.shade900,
       ),
       body: StreamBuilder<List<UserLog>>(
         stream: userLogService.getTodos(),
@@ -34,19 +33,22 @@ class _UserLogDataState extends State<UserLogData> {
             itemBuilder: (context, index) {
               final user = userLog[index];
               return Center(
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children:  <Widget>[
-            ListTile(
-              // leading: Icon(Icons.album),
-              title: Text(('Date: ')+(user.date ?? '')),
-              subtitle: Text(('Sign In Time: ')+(user.hour ?? '') + (':') + (user.minute ?? '')),
-            ),
-          ],
-        ),
-      ),
-    );
+                child: Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        // leading: Icon(Icons.album),
+                        title: Text(('Date: ') + (user.date ?? '')),
+                        subtitle: Text(('Sign In Time: ') +
+                            (user.hour ?? '') +
+                            (':') +
+                            (user.minute ?? '')),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           );
         },
@@ -54,4 +56,3 @@ class _UserLogDataState extends State<UserLogData> {
     );
   }
 }
-

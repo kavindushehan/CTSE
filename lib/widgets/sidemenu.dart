@@ -1,5 +1,7 @@
+import 'package:ctse_app/screens/aboutus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../screens/auth/profile.dart';
 import 'fabtabs.dart';
 
 class SideMenu extends StatefulWidget {
@@ -11,7 +13,7 @@ class SideMenu extends StatefulWidget {
 
 class _SideMenuState extends State<SideMenu> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  String? img='';
+  String? img = '';
 
   @override
   void initState() {
@@ -43,9 +45,9 @@ class _SideMenuState extends State<SideMenu> {
                           size: 80,
                         )
                       : CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(user?.photoURL ?? ''),
-              )),
+                          radius: 40,
+                          backgroundImage: NetworkImage(user?.photoURL ?? ''),
+                        )),
               const SizedBox(height: 10),
               Text(
                 user?.displayName ?? '',
@@ -72,19 +74,25 @@ class _SideMenuState extends State<SideMenu> {
             title: const Text("Profile"),
             onTap: () => {
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FabTabs(selectedIndex: 1)))
+                  context, MaterialPageRoute(builder: (context) => MyProfile()))
             },
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text("About Us"),
             onTap: () => {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => AboutUsPage()))
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text("Contact Us"),
+            onTap: () => {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => FabTabs(selectedIndex: 4)))
+                      builder: (context) => FabTabs(selectedIndex: 5)))
             },
           ),
           ListTile(
