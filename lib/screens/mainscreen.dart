@@ -53,6 +53,7 @@ class _HomeState extends State<Home> {
                     hintText: "Search todos...",
                     hintStyle: TextStyle(color: Colors.white),
                     border: InputBorder.none),
+                style: TextStyle(color: Colors.white),
                 onChanged: (value) {
                   setState(() {});
                 },

@@ -23,7 +23,7 @@ class _HomeState extends State<NoteScreen> {
       drawer: SideMenu(),
       appBar: AppBar(
         title: Text('Notes'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple.shade900,
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -149,8 +149,8 @@ class _HomeState extends State<NoteScreen> {
   void _showEditNoteDialog(BuildContext context, Notes note) {
     final TextEditingController noteDescriptionController =
         TextEditingController(text: note.noteDescription);
-   // final TextEditingController amountController =
-        //TextEditingController(text: budget.amount);
+    // final TextEditingController amountController =
+    //TextEditingController(text: budget.amount);
 
     showDialog(
       context: context,
