@@ -1,16 +1,10 @@
-# ctse_app
+# UpTodo - CTSE Project
 
-A new Flutter project.
+Welcome to our Todo app!
 
-## Getting Started
+## Our Team
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+IT20076566 - De Silva G.K.S
+IT20152864 - Perera K.A.P.M
+IT20233358 - Diunugala M.W
+IT20120634 - Ariyarathna H.M.M.M
