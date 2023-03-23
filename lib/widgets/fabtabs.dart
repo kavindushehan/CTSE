@@ -1,4 +1,5 @@
 import 'package:ctse_app/screens/aboutus.dart';
+import 'package:ctse_app/screens/contactus.dart';
 import 'package:ctse_app/screens/auth/profile.dart';
 import 'package:ctse_app/screens/budget/budget_screen.dart';
 import 'package:ctse_app/screens/note/note_screen.dart';
@@ -68,6 +69,8 @@ class _FabTabsState extends State<FabTabs> {
             ? NoteScreen()
             : currentIndex == 2
                 ? BudgetScreen()
+                : currentIndex == 5
+                ? ContactScreen()
                 : currentIndex == 4
                     ? AboutUsPage()
                     : Home();
