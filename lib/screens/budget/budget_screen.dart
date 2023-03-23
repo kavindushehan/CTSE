@@ -16,7 +16,7 @@ class _HomeState extends State<BudgetScreen> {
   final BudgetsService _budgetsService = BudgetsService();
   late TextEditingController _searchController;
   bool _isSearching = false;
-  bool _showCompleted = false;
+  bool _showCompleted = true;
   bool _showNonCompleted = true;
 
   @override
@@ -154,6 +154,9 @@ class _HomeState extends State<BudgetScreen> {
           }
 
           return ListView.builder(
+            itemCount: filteredBudgets.length == 0
+                ? budgets.length
+                : filteredBudgets.length,
             itemBuilder: (context, index) {
               final budget = filteredBudgets.length == 0
                   ? budgets[index]
