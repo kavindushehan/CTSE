@@ -48,7 +48,7 @@ class _HomeState extends State<BudgetScreen> {
                 },
               )
             : const Text("Budgets"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple.shade900,
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.cancel : Icons.search),
@@ -154,9 +154,11 @@ class _HomeState extends State<BudgetScreen> {
           }
 
           return ListView.builder(
-            itemCount: filteredBudgets.length,
             itemBuilder: (context, index) {
-              final budget = filteredBudgets[index];
+              final budget = filteredBudgets.length == 0
+                  ? budgets[index]
+                  : filteredBudgets[index];
+
               return Card(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
