@@ -43,7 +43,7 @@ class _HomeState extends State<BudgetScreen> {
                     hintText: "Search budgets...",
                     hintStyle: TextStyle(color: Colors.white),
                     border: InputBorder.none),
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 onChanged: (value) {
                   setState(() {});
                 },
@@ -155,10 +155,12 @@ class _HomeState extends State<BudgetScreen> {
           }
 
           return ListView.builder(
+            // ignore: prefer_is_empty
             itemCount: filteredBudgets.length == 0
                 ? budgets.length
                 : filteredBudgets.length,
             itemBuilder: (context, index) {
+              // ignore: prefer_is_empty
               final budget = filteredBudgets.length == 0
                   ? budgets[index]
                   : filteredBudgets[index];
