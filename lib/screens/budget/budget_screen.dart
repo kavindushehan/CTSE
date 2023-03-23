@@ -43,6 +43,7 @@ class _HomeState extends State<BudgetScreen> {
                     hintText: "Search budgets...",
                     hintStyle: TextStyle(color: Colors.white),
                     border: InputBorder.none),
+                style: TextStyle(color: Colors.white),
                 onChanged: (value) {
                   setState(() {});
                 },
