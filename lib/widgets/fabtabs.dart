@@ -1,6 +1,7 @@
 import 'package:ctse_app/screens/aboutus.dart';
 import 'package:ctse_app/screens/auth/profile.dart';
 import 'package:ctse_app/screens/budget/budget_screen.dart';
+import 'package:ctse_app/screens/note/note_screen.dart';
 import 'package:ctse_app/screens/mainscreen.dart';
 import 'package:flutter/material.dart';
 
@@ -64,7 +65,7 @@ class _FabTabsState extends State<FabTabs> {
     Widget currentScreen = currentIndex == 0
         ? Home()
         : currentIndex == 1
-            ? MyProfile()
+            ? NoteScreen()
             : currentIndex == 2
                 ? BudgetScreen()
                 : currentIndex == 4
@@ -135,7 +136,7 @@ class _FabTabsState extends State<FabTabs> {
                     minWidth: 50,
                     onPressed: () {
                       setState(() {
-                        // currentScreen = MyProfile();
+                        currentScreen = NoteScreen();
                         currentIndex = 1;
                       });
                     },
