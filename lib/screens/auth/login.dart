@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../../services/auth.dart';
 import '../../widgets/loading.dart';
 
-
 class EmailSignin extends StatefulWidget {
   const EmailSignin({Key? key}) : super(key: key);
 
@@ -126,7 +125,6 @@ class _EmailSigninState extends State<EmailSignin> {
                                       setState(() {
                                         isLoading = false;
                                       });
-                                      print('Successfully Logged In');
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
                                         content: Text('Successfully Logged In'),
@@ -174,5 +172,3 @@ class _EmailSigninState extends State<EmailSignin> {
                     ],
                   ))));
 }
-
-

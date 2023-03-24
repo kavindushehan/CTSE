@@ -1,4 +1,5 @@
 import 'package:ctse_app/screens/aboutus.dart';
+import 'package:ctse_app/screens/contactus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../screens/auth/profile.dart';
@@ -73,8 +74,8 @@ class _SideMenuState extends State<SideMenu> {
             leading: const Icon(Icons.person),
             title: const Text("Profile"),
             onTap: () => {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => MyProfile()))
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const MyProfile()))
             },
           ),
           ListTile(
@@ -86,13 +87,13 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.info_outline),
+            leading: const Icon(Icons.phone),
             title: const Text("Contact Us"),
             onTap: () => {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => FabTabs(selectedIndex: 5)))
+                      builder: (context) => const ContactScreen()))
             },
           ),
           ListTile(
