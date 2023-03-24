@@ -23,6 +23,8 @@ class MyProfile extends StatefulWidget {
   State<MyProfile> createState() => _MyProfileState();
 }
 
+final updateUserForm = GlobalKey<FormState>();
+
 class _MyProfileState extends State<MyProfile> {
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -34,22 +36,19 @@ class _MyProfileState extends State<MyProfile> {
   late final String UserId;
   late dynamic result = 'Email';
 
-  final updateUserForm = GlobalKey<FormState>();
-
   String? img = '';
-  // Initial Selected Value
+  // Initial Value
   String dropdownvalue = 'Male';
   String? dropVal;
+  String? newFirstName;
+  String? newLastName;
+  String? newEmail;
   // List of items in our dropdown menu
   var items = [
     'Male',
     'Female',
     'Other',
   ];
-
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
@@ -70,6 +69,7 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) => isLoading
       ? const LoadingPage()
       : Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Colors.purple.shade900,
@@ -132,9 +132,6 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Widget buildUserForm(UserModel user) {
-    firstNameController.text = user.firstName ?? 'First Name';
-    lastNameController.text = user.lastName ?? 'Last Name';
-    emailController.text = user.email ?? 'Email';
     dropdownvalue = user.gender ?? 'Other';
 
     return Form(
@@ -176,11 +173,17 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                   ),
                   TextFormField(
-                    controller: firstNameController,
+
+                    initialValue: user.firstName ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your First name?',
                       labelText: 'First Name *',
                     ),
+                    onChanged: (value){
+                      setState(() {
+                        newFirstName= value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter Your First Name';
@@ -192,11 +195,17 @@ class _MyProfileState extends State<MyProfile> {
                     },
                   ),
                   TextFormField(
-                    controller: lastNameController,
+
+                    initialValue: user.lastName ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your Last name?',
                       labelText: 'Last Name *',
                     ),
+                    onChanged: (value){
+                      setState(() {
+                        newLastName= value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter Your Last Name';
@@ -229,11 +238,16 @@ class _MyProfileState extends State<MyProfile> {
                     },
                   ),
                   TextFormField(
-                    controller: emailController,
+                    initialValue: user.email ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your Email?',
                       labelText: 'Email *',
                     ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        newEmail = newValue!;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter a email';
@@ -256,10 +270,11 @@ class _MyProfileState extends State<MyProfile> {
                           setState(() {
                             isLoading = true;
                           });
+                          print(dropdownvalue);
                           dynamic result = await _auth.updateUser(
-                              firstNameController.text,
-                              lastNameController.text,
-                              emailController.text,
+                              newFirstName,
+                              newLastName,
+                              newEmail,
                               dropVal,
                               img);
                           if (result == 'Success') {

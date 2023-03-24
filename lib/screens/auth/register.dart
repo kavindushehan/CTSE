@@ -27,11 +27,11 @@ class _RegisterState extends State<Register> {
   final TextEditingController pass = TextEditingController();
   final TextEditingController confirmPass = TextEditingController();
 
-   // Initial Selected Value
-  String dropdownvalue = 'Male';   
-  
+  // Initial Selected Value
+  String dropdownvalue = 'Male';
+
   // List of items in our dropdown menu
-  var items = [    
+  var items = [
     'Male',
     'Female',
     'Other',
@@ -108,6 +108,10 @@ class _RegisterState extends State<Register> {
                               return null;
                             },
                           ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const Text('Gender *'),
                           DropdownButton(
                             value: dropdownvalue,
                             icon: const Icon(Icons.keyboard_arrow_down),
