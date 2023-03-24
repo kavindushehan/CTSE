@@ -109,7 +109,7 @@ class _ContactScreenState extends State<ContactScreen>{
             controller: emailController,
             decoration: const InputDecoration(
               icon: const Icon(Icons.email),
-              hintText: 'Email',
+              hintText: 'Enter your Email',
               labelText: 'Email',
             ),
             validator: (value) {
