@@ -14,6 +14,7 @@ class EmailSignin extends StatefulWidget {
 }
 
 class _EmailSigninState extends State<EmailSignin> {
+  //Declaring Variables
   bool _obsecureText = true;
   bool isLoading = false;
   final AuthService _auth = AuthService();
@@ -119,6 +120,7 @@ class _EmailSigninState extends State<EmailSignin> {
                                     setState(() {
                                       isLoading = true;
                                     });
+                                    //Pass data to signInEmail function to Sign in
                                     dynamic result = await _auth.signInEmail(
                                         email.text, pass.text);
                                     if (result == 'Success') {

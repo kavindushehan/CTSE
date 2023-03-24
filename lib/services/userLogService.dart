@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/userLog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-
 class UserLogService {
-
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final String collectionName = "userLog";
@@ -16,6 +13,7 @@ class UserLogService {
     _uid = _auth.currentUser!.uid;
   }
 
+//Get data from the firestore
   Stream<List<UserLog>> getTodos() {
     return _db
         .collection('userData')
@@ -25,7 +23,4 @@ class UserLogService {
         .map((snapshot) =>
             snapshot.docs.map((doc) => UserLog.fromMap(doc.data())).toList());
   }
-
-  
-
 }
