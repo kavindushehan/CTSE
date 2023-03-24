@@ -109,22 +109,25 @@ class _HomeState extends State<NoteScreen> {
             itemBuilder: (context, index) {
               final note = notes[index];
               if (_searchQuery.isNotEmpty &&
-                  !note.noteDescription
-                      .toLowerCase()
-                      .contains(_searchQuery.toLowerCase())) {
+                  !note.noteDescription.toLowerCase().contains(_searchQuery.toLowerCase())) {
                 return Container();
               }
               return Slidable(
                   actionPane: SlidableDrawerActionPane(),
                   actionExtentRatio: 0.25,
                   child: ListTile(
-                    title: Text(note.noteDescription),
-                    //subtitle: Text(budget.amount),
+                    shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                    title: Text(note.noteTitle),
+                    subtitle: Text(note.noteDescription),
+                    
                   ),
+                  
                   actions: [
                     IconSlideAction(
                       caption: 'Edit',
-                      color: Colors.blue,
+                      color: Colors.green,
                       icon: Icons.edit,
                       onTap: () {
                         _showEditNoteDialog(context, note);
@@ -147,8 +150,11 @@ class _HomeState extends State<NoteScreen> {
   }
 
   void _showEditNoteDialog(BuildContext context, Notes note) {
-    final TextEditingController noteDescriptionController =
+    final TextEditingController noteTitleController =
+        TextEditingController(text: note.noteTitle);
+        final TextEditingController noteDescriptionController =
         TextEditingController(text: note.noteDescription);
+        
     // final TextEditingController amountController =
     //TextEditingController(text: budget.amount);
 
@@ -160,6 +166,12 @@ class _HomeState extends State<NoteScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              TextField(
+                controller: noteTitleController,
+                decoration: InputDecoration(
+                  labelText: "Note Title",
+                ),
+              ),
               TextField(
                 controller: noteDescriptionController,
                 decoration: InputDecoration(
@@ -184,6 +196,7 @@ class _HomeState extends State<NoteScreen> {
             TextButton(
               onPressed: () {
                 note.noteDescription = noteDescriptionController.text;
+                note.noteTitle = noteTitleController.text;
                 //budget.amount = amountController.text;
                 _notesService.updateNotes(note);
                 Navigator.pop(context);
