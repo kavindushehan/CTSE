@@ -72,7 +72,7 @@ class _ContactScreenState extends State<ContactScreen>{
             decoration: const InputDecoration(
               icon: const Icon(Icons.account_circle),
               hintText: 'Name',
-              labelText: 'Name',
+              labelText: 'Enter Your Name',
             ),
             validator: (value) {
                               if (value == null || value.isEmpty) {
