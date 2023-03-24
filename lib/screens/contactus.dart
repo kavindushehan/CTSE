@@ -17,16 +17,20 @@ final nameController = TextEditingController();
 final subjectController = TextEditingController();
 final emailController = TextEditingController();
 final messageController = TextEditingController();
-  final List<String> _priorities = ['High', 'Medium', 'Low'];
-  String _selectedPriority = 'Low';
+  final List<String> _priorities = ['Critical', 'Not Satisfied', 'Somewhat Satisfied', 'Satisfied','Perfect'];
+  String _selectedPriority = 'Perfect';
 
   Color _getColorForPriority(String priority) {
     // return color based on priority
-    if (priority == 'High') {
+    if (priority == 'Critical') {
       return Colors.red;
-    } else if (priority == 'Medium') {
+    } else if (priority == 'Not Satisfied') {
+      return Color.fromARGB(255, 255, 106, 0);
+    } else if (priority == 'Somewhat Satisfied') {
       return Colors.orange;
-    } else {
+    }else if (priority == 'Satisfied') {
+      return Color.fromARGB(255, 255, 251, 0);
+    }else {
       return Colors.green;
     }
   }
@@ -160,7 +164,7 @@ class _ContactScreenState extends State<ContactScreen>{
                       });
                     },
                     decoration: const InputDecoration(
-                      labelText: 'Priority',
+                      labelText: 'User Feedback Level',
                       border: OutlineInputBorder(),
                     ),
                     items: _priorities
@@ -173,7 +177,7 @@ class _ContactScreenState extends State<ContactScreen>{
                                   height: 10,
                                   margin: const EdgeInsets.only(right: 8),
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
+                                    shape: BoxShape.rectangle,
                                     color: _getColorForPriority(priority),
                                   ),
                                 ),
