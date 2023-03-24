@@ -33,13 +33,13 @@ class _FabTabsState extends State<FabTabs> {
     if (currentIndex == 3) {
       dynamic result = await auth.signOut();
       if (result == 'Success') {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Successfully Signed Out'),
         ));
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => EmailSignin()));
+            context, MaterialPageRoute(builder: (_) => const EmailSignin()));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Error signing out'),
         ));
       }
@@ -54,8 +54,8 @@ class _FabTabsState extends State<FabTabs> {
   }
 
   final List<Widget> pages = [
-    Home(),
-    MyProfile(),
+    const Home(),
+    const MyProfile(),
     // Team(),
     // More()
   ];
@@ -64,24 +64,21 @@ class _FabTabsState extends State<FabTabs> {
   @override
   Widget build(BuildContext context) {
     Widget currentScreen = currentIndex == 0
-        ? Home()
+        ? const Home()
         : currentIndex == 1
-            ? NoteScreen()
+            ? const NoteScreen()
             : currentIndex == 2
-                ? BudgetScreen()
-                : currentIndex == 5
-                ? ContactScreen()
-                : currentIndex == 4
-                    ? AboutUsPage()
-                    : Home();
+                ? const BudgetScreen()
+                : const Home();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: PageStorage(
-        child: currentScreen,
         bucket: bucket,
+        child: currentScreen,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.purple.shade900,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           showDialog(
             context: context,
@@ -98,7 +95,7 @@ class _FabTabsState extends State<FabTabs> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
         child: Container(
           height: 60,
@@ -112,7 +109,7 @@ class _FabTabsState extends State<FabTabs> {
                     minWidth: 50,
                     onPressed: () {
                       setState(() {
-                        currentScreen = Home();
+                        currentScreen = const Home();
                         currentIndex = 0;
                       });
                     },
@@ -139,7 +136,7 @@ class _FabTabsState extends State<FabTabs> {
                     minWidth: 50,
                     onPressed: () {
                       setState(() {
-                        currentScreen = NoteScreen();
+                        currentScreen = const NoteScreen();
                         currentIndex = 1;
                       });
                     },
@@ -171,7 +168,7 @@ class _FabTabsState extends State<FabTabs> {
                     minWidth: 50,
                     onPressed: () {
                       setState(() {
-                        currentScreen = BudgetScreen();
+                        currentScreen = const BudgetScreen();
                         currentIndex = 2;
                       });
                     },
@@ -199,13 +196,17 @@ class _FabTabsState extends State<FabTabs> {
                     onPressed: () async {
                       dynamic result = await auth.signOut();
                       if (result == 'Success') {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
                           content: Text('Successfully Signed Out'),
                         ));
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => EmailSignin()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const EmailSignin()));
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
                           content: Text('Error signing out'),
                         ));
                       }
