@@ -91,6 +91,7 @@ class _AddNoteModalState extends State<AddNoteModel> {
                       return null;
                     },
                   ),
+                 
                   SizedBox(height: 16.0),
                   Center(
                     child: ElevatedButton(
@@ -99,13 +100,11 @@ class _AddNoteModalState extends State<AddNoteModel> {
                           String noteId = Uuid().v4();
                           String noteTitle = _noteTitleController.text.trim();
                           String noteDescription = _noteDescriptionController.text.trim();
-                          //String noteDescription = _noteDescriptionController.text.trim();
                           //String amount = _amountController.text.trim();
                           Notes note = Notes(
                             noteId: noteId,
                             noteTitle: noteTitle,
                             noteDescription: noteDescription,
-                            
                             //amount: amount,
                           );
                           await widget.onNoteAdded(note);

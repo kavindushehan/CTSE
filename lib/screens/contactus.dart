@@ -17,6 +17,19 @@ final nameController = TextEditingController();
 final subjectController = TextEditingController();
 final emailController = TextEditingController();
 final messageController = TextEditingController();
+  final List<String> _priorities = ['High', 'Medium', 'Low'];
+  String _selectedPriority = 'Low';
+
+  Color _getColorForPriority(String priority) {
+    // return color based on priority
+    if (priority == 'High') {
+      return Colors.red;
+    } else if (priority == 'Medium') {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
+  }
 
 Future sendEmail() async{
   final url = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
@@ -31,9 +44,11 @@ Future sendEmail() async{
     "user_id": userId,
     "template_params":{
       "name":nameController.text,
+      "priority":_selectedPriority,
       "subject": subjectController.text,
       "message": messageController.text,
       "user_email":emailController.text
+       
     }
   })
   );
@@ -54,7 +69,7 @@ class _ContactScreenState extends State<ContactScreen>{
       home: Scaffold(
         appBar: AppBar(
          title: Text("Contact Us"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.purple.shade900,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pushReplacement(
@@ -66,7 +81,7 @@ class _ContactScreenState extends State<ContactScreen>{
       child: Form(
         autovalidateMode: AutovalidateMode.always,
         child: Column(children: [
-          Lottie.network('https://assets5.lottiefiles.com/packages/lf20_HxqVQ4.json'),
+         
           TextFormField(
             controller: nameController,
             decoration: const InputDecoration(
@@ -136,6 +151,37 @@ class _ContactScreenState extends State<ContactScreen>{
            SizedBox(
             height: 30,
           ),
+           const SizedBox(height: 16.0),
+                  DropdownButtonFormField<String>(
+                    value: _selectedPriority,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedPriority = value!;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Priority',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: _priorities
+                        .map((priority) => DropdownMenuItem(
+                            value: priority,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _getColorForPriority(priority),
+                                  ),
+                                ),
+                                Text(priority),
+                              ],
+                            )))
+                        .toList(),
+                  ),
           ElevatedButton(
             onPressed: (){
                 sendEmail();
@@ -149,7 +195,9 @@ class _ContactScreenState extends State<ContactScreen>{
               "Send",
               style: TextStyle(fontSize: 20),
             ),
-            )
+            
+            ),
+             Lottie.network('https://assets5.lottiefiles.com/packages/lf20_HxqVQ4.json'),
         ],
         )),
       ),
