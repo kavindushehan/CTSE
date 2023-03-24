@@ -94,6 +94,13 @@ class _ContactScreenState extends State<ContactScreen>{
               hintText: 'Subject',
               labelText: 'Subject',
             ),
+            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please a Subject';
+                              }
+                              
+                              return null;
+                            },
           ),
           SizedBox(
             height: 25,
