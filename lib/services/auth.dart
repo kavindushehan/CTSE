@@ -1,17 +1,15 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ctse_app/models/user.dart';
 import 'package:ctse_app/models/userLog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uuid/uuid.dart';
-
-
 
 class AuthService {
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  var uuid = Uuid();
 
+
+  //Registe the user
   Future registerUser(firstName, lastName, gender, email, password) async {
     try {
       UserModel userModel = UserModel();
@@ -21,6 +19,7 @@ class AuthService {
       userModel.gender = gender;
       userModel.email = email;
 
+      //Register with user authentication
       await _auth
           .createUserWithEmailAndPassword(
         email: email,
@@ -34,6 +33,7 @@ class AuthService {
         }
       });
 
+      //Add data to firestore
       await _fireStore
           .collection('userData')
           .doc(userModel.uid)
@@ -57,9 +57,7 @@ class AuthService {
 
   //Sign in with email and password
   Future signInEmail(formEmail, formPassword) async {
-
     UserLog userLog = UserLog();
-
 
     if (_auth.currentUser != null) {
       return 'User already Signed In in to the System';
@@ -67,7 +65,6 @@ class AuthService {
       try {
         UserCredential result = await _auth.signInWithEmailAndPassword(
             email: formEmail, password: formPassword);
-
 
         DateTime today = DateTime.now();
         String nowTime = "$today";
@@ -78,13 +75,14 @@ class AuthService {
         userLog.date = dateStr;
         userLog.hour = hourStr;
         userLog.minute = minuteStr;
-        
+
+        //Add data to firestore
         await _fireStore
-        .collection('userData')
-        .doc(_auth.currentUser?.uid)
-        .collection('userLog')
-        .doc(nowTime)
-        .set(userLog.toMap());
+            .collection('userData')
+            .doc(_auth.currentUser?.uid)
+            .collection('userLog')
+            .doc(nowTime)
+            .set(userLog.toMap());
 
         return 'Success';
       } on FirebaseAuthException catch (e) {
@@ -99,22 +97,9 @@ class AuthService {
     }
   }
 
-  Future signInAnon() async {
-    try {
-      UserCredential result = await _auth.signInAnonymously();
-      return (result);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
   //Sign out
   Future signOut() async {
-
-
     try {
-
       await _auth.signOut();
       return 'Success';
     } catch (e) {
@@ -126,14 +111,9 @@ class AuthService {
   Future deleteUser() async {
     try {
       String? userid = _auth.currentUser?.uid;
-      await _auth.currentUser!.delete().then((value)async => 
-      await _fireStore
-          .collection('userData')
-          .doc(userid)
-          .delete()
-          );
-      
-      
+      await _auth.currentUser!.delete().then((value) async =>
+          await _fireStore.collection('userData').doc(userid).delete());
+
       return 'Success';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'requires-recent-login') {
@@ -182,16 +162,20 @@ class AuthService {
   }
 
   //Update firestore data
-  Future updateUser(
-      firstNameUpdated, lastNameUpdated, emailUpdated,dropdownval, image) async {
+  Future updateUser(firstNameUpdated, lastNameUpdated, emailUpdated,
+      dropdownval, image) async {
+    //Update user profile picture
     try {
       if (image != null) {
         await _auth.currentUser?.updatePhotoURL(image);
       }
 
+      //Update User Email
       await _auth.currentUser?.updateEmail(emailUpdated);
+      //Update display Name
       await _auth.currentUser
           ?.updateDisplayName(firstNameUpdated + " " + lastNameUpdated);
+      //Update user data in firestore
       await _fireStore
           .collection('userData')
           .doc(_auth.currentUser?.uid)
@@ -199,13 +183,11 @@ class AuthService {
         'firstName': firstNameUpdated,
         'lastName': lastNameUpdated,
         'email': emailUpdated,
-        'gender':dropdownval
+        'gender': dropdownval
       });
       return 'Success';
     } catch (e) {
       return e.toString();
     }
   }
-
-  
 }
