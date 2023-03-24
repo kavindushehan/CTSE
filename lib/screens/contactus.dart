@@ -76,7 +76,7 @@ class _ContactScreenState extends State<ContactScreen>{
             ),
             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Enter Your Name';
+                                return 'Please Enter Your Name';
                               }
                               if (!value.isValidName()) {
                                 return 'Please enter a valid name';
