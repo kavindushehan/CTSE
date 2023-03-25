@@ -207,8 +207,7 @@ class _RegisterState extends State<Register> {
                               padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  minimumSize: const Size.fromHeight(
-                                      40), // fromHeight use double.infinity as width and 40 is the height
+                                  minimumSize: const Size.fromHeight(40),
                                 ),
                                 child: const Text('Register'),
                                 onPressed: () async {
@@ -217,6 +216,7 @@ class _RegisterState extends State<Register> {
                                   });
                                   if (registrationFormUser.currentState!
                                       .validate()) {
+                                    //Pass values to registeUser function to register the user
                                     dynamic result = await auth.registerUser(
                                         firstName.text,
                                         lastName.text,

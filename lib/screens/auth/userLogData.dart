@@ -20,6 +20,7 @@ class _UserLogDataState extends State<UserLogData> {
         backgroundColor: Colors.purple.shade900,
       ),
       body: StreamBuilder<List<UserLog>>(
+        //Retrieve data from the firestore
         stream: userLogService.getTodos(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -38,7 +39,7 @@ class _UserLogDataState extends State<UserLogData> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       ListTile(
-                        // leading: Icon(Icons.album),
+                        //Display data in the card widget
                         title: Text(('Date: ') + (user.date ?? '')),
                         subtitle: Text(('Sign In Time: ') +
                             (user.hour ?? '') +

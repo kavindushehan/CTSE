@@ -26,23 +26,26 @@ class MyProfile extends StatefulWidget {
 final updateUserForm = GlobalKey<FormState>();
 
 class _MyProfileState extends State<MyProfile> {
+  //Declaring service variables
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   UserModel currentUser = UserModel();
 
+  //Declaring variables
   bool isLoading = false;
   late final String UserId;
   late dynamic result = 'Email';
 
   String? img = '';
-  // Initial Value
+
   String dropdownvalue = 'Male';
   String? dropVal;
   String? newFirstName;
   String? newLastName;
   String? newEmail;
+
   // List of items in our dropdown menu
   var items = [
     'Male',
@@ -57,6 +60,7 @@ class _MyProfileState extends State<MyProfile> {
 
     setState(() {
       UserId = result!;
+      //Set image
       if (auth.currentUser?.photoURL != null) {
         img = auth.currentUser?.photoURL;
       }
@@ -103,6 +107,7 @@ class _MyProfileState extends State<MyProfile> {
             },
           ));
 
+//Get Data from the firestore
   Future<UserModel?> readUser(userId) async {
     final docUser = _fireStore.collection("userData").doc(userId);
     final snapshot = await docUser.get();
@@ -116,6 +121,7 @@ class _MyProfileState extends State<MyProfile> {
     return null;
   }
 
+//Function to insert an image for profile picture
   Future<void> _pickImage() async {
     setState(() {
       isLoading = true;
@@ -131,6 +137,7 @@ class _MyProfileState extends State<MyProfile> {
     });
   }
 
+//
   Widget buildUserForm(UserModel user) {
     dropdownvalue = user.gender ?? 'Other';
 
@@ -173,15 +180,14 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                   ),
                   TextFormField(
-
                     initialValue: user.firstName ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your First name?',
                       labelText: 'First Name *',
                     ),
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
-                        newFirstName= value;
+                        newFirstName = value;
                       });
                     },
                     validator: (value) {
@@ -195,15 +201,14 @@ class _MyProfileState extends State<MyProfile> {
                     },
                   ),
                   TextFormField(
-
                     initialValue: user.lastName ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your Last name?',
                       labelText: 'Last Name *',
                     ),
-                    onChanged: (value){
+                    onChanged: (value) {
                       setState(() {
-                        newLastName= value;
+                        newLastName = value;
                       });
                     },
                     validator: (value) {
@@ -270,13 +275,9 @@ class _MyProfileState extends State<MyProfile> {
                           setState(() {
                             isLoading = true;
                           });
-                          print(dropdownvalue);
-                          dynamic result = await _auth.updateUser(
-                              newFirstName,
-                              newLastName,
-                              newEmail,
-                              dropVal,
-                              img);
+                          //pass values to updateUser function to update the user data
+                          dynamic result = await _auth.updateUser(newFirstName,
+                              newLastName, newEmail, dropVal, img);
                           if (result == 'Success') {
                             setState(() {
                               isLoading = false;
