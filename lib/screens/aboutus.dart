@@ -31,7 +31,7 @@ class AboutUsPage extends StatelessWidget {
             ),
             const SizedBox(height: 30.0),
             const Text(
-              'Welcome to our Todo app!',
+              'Welcome to our UpTodo app!',
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
