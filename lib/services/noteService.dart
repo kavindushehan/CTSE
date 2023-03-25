@@ -18,7 +18,7 @@ class NotesService {
         .collection('userData')
         .doc(_uid)
         .collection(collectionName)
-        .orderBy("noteDescription")
+        .orderBy("noteTitle")
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Notes.fromJson(doc.data())).toList());

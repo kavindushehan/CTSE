@@ -23,33 +23,35 @@ class MyProfile extends StatefulWidget {
   State<MyProfile> createState() => _MyProfileState();
 }
 
+final updateUserForm = GlobalKey<FormState>();
+
 class _MyProfileState extends State<MyProfile> {
+  //Declaring service variables
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   UserModel currentUser = UserModel();
 
+  //Declaring variables
   bool isLoading = false;
   late final String UserId;
   late dynamic result = 'Email';
 
-  final updateUserForm = GlobalKey<FormState>();
-
   String? img = '';
-  // Initial Selected Value
+
   String dropdownvalue = 'Male';
   String? dropVal;
+  String? newFirstName;
+  String? newLastName;
+  String? newEmail;
+
   // List of items in our dropdown menu
   var items = [
     'Male',
     'Female',
     'Other',
   ];
-
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
@@ -58,8 +60,10 @@ class _MyProfileState extends State<MyProfile> {
 
     setState(() {
       UserId = result!;
+      //Set image
       if (auth.currentUser?.photoURL != null) {
         img = auth.currentUser?.photoURL;
+        newEmail = auth.currentUser?.email;
       }
       isLoading = false;
     });
@@ -70,6 +74,7 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) => isLoading
       ? const LoadingPage()
       : Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Colors.purple.shade900,
@@ -103,6 +108,7 @@ class _MyProfileState extends State<MyProfile> {
             },
           ));
 
+//Get Data from the firestore
   Future<UserModel?> readUser(userId) async {
     final docUser = _fireStore.collection("userData").doc(userId);
     final snapshot = await docUser.get();
@@ -116,6 +122,7 @@ class _MyProfileState extends State<MyProfile> {
     return null;
   }
 
+//Function to insert an image for profile picture
   Future<void> _pickImage() async {
     setState(() {
       isLoading = true;
@@ -131,10 +138,8 @@ class _MyProfileState extends State<MyProfile> {
     });
   }
 
+//
   Widget buildUserForm(UserModel user) {
-    firstNameController.text = user.firstName ?? 'First Name';
-    lastNameController.text = user.lastName ?? 'Last Name';
-    emailController.text = user.email ?? 'Email';
     dropdownvalue = user.gender ?? 'Other';
 
     return Form(
@@ -176,11 +181,16 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                   ),
                   TextFormField(
-                    controller: firstNameController,
+                    initialValue: user.firstName ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your First name?',
                       labelText: 'First Name *',
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        newFirstName = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter Your First Name';
@@ -192,11 +202,16 @@ class _MyProfileState extends State<MyProfile> {
                     },
                   ),
                   TextFormField(
-                    controller: lastNameController,
+                    initialValue: user.lastName ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your Last name?',
                       labelText: 'Last Name *',
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        newLastName = value;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter Your Last Name';
@@ -229,11 +244,16 @@ class _MyProfileState extends State<MyProfile> {
                     },
                   ),
                   TextFormField(
-                    controller: emailController,
+                    initialValue: user.email ?? '',
                     decoration: const InputDecoration(
                       hintText: 'Edit your Email?',
                       labelText: 'Email *',
                     ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        newEmail = newValue!;
+                      });
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter a email';
@@ -256,12 +276,9 @@ class _MyProfileState extends State<MyProfile> {
                           setState(() {
                             isLoading = true;
                           });
-                          dynamic result = await _auth.updateUser(
-                              firstNameController.text,
-                              lastNameController.text,
-                              emailController.text,
-                              dropVal,
-                              img);
+                          //pass values to updateUser function to update the user data
+                          dynamic result = await _auth.updateUser(newFirstName,
+                              newLastName, newEmail, dropVal, img);
                           if (result == 'Success') {
                             setState(() {
                               isLoading = false;

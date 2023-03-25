@@ -14,8 +14,9 @@ class AddNoteModel extends StatefulWidget {
 
 class _AddNoteModalState extends State<AddNoteModel> {
   final _formKey = GlobalKey<FormState>();
+  final _noteTitleController = TextEditingController();
   final _noteDescriptionController = TextEditingController();
-  //final _amountController = TextEditingController();
+  final _noteTypeController = TextEditingController();
   double _noteDescription = 0;
 
   void _incrementAmount() {
@@ -65,6 +66,19 @@ class _AddNoteModalState extends State<AddNoteModel> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
+                    controller: _noteTitleController,
+                    decoration: InputDecoration(
+                      labelText: 'Title',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a Title';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
                     controller: _noteDescriptionController,
                     decoration: InputDecoration(
                       labelText: 'Description',
@@ -77,50 +91,19 @@ class _AddNoteModalState extends State<AddNoteModel> {
                       return null;
                     },
                   ),
-                  // SizedBox(height: 16.0),
-                  // Row(
-                  //   children: [
-                  //     IconButton(
-                  //       onPressed: _decrementAmount,
-                  //       icon: Icon(Icons.remove),
-                  //     ),
-                  //     Expanded(
-                  //       child: TextFormField(
-                  //         controller: _amountController,
-                  //         keyboardType: TextInputType.number,
-                  //         decoration: InputDecoration(
-                  //           labelText: 'Amount',
-                  //           border: OutlineInputBorder(),
-                  //         ),
-                  //         validator: (value) {
-                  //           if (value == null || value.isEmpty) {
-                  //             return 'Please enter an amount';
-                  //           }
-                  //           return null;
-                  //         },
-                  //         onChanged: (value) {
-                  //           setState(() {
-                  //             _amount = double.parse(value);
-                  //           });
-                  //         },
-                  //       ),
-                  //     ),
-                  //     IconButton(
-                  //       onPressed: _incrementAmount,
-                  //       icon: Icon(Icons.add),
-                  //     ),
-                  //   ],
-                  // ),
+                 
                   SizedBox(height: 16.0),
                   Center(
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           String noteId = Uuid().v4();
+                          String noteTitle = _noteTitleController.text.trim();
                           String noteDescription = _noteDescriptionController.text.trim();
                           //String amount = _amountController.text.trim();
                           Notes note = Notes(
                             noteId: noteId,
+                            noteTitle: noteTitle,
                             noteDescription: noteDescription,
                             //amount: amount,
                           );

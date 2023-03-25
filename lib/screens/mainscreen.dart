@@ -172,6 +172,11 @@ class _HomeState extends State<Home> {
               final todo = filteredTodos.length == 0
                   ? todos[index]
                   : filteredTodos[index];
+              final DateTime today = DateTime.now();
+              final DateTime todoDate = todo.dateTime;
+              final bool isOverdue =
+                  DateTime(today.year, today.month, today.day).isAfter(
+                      DateTime(todoDate.year, todoDate.month, todoDate.day));
               return Card(
                 elevation: 4.0,
                 shape: RoundedRectangleBorder(
@@ -258,18 +263,42 @@ class _HomeState extends State<Home> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          TextButton.icon(
-                            onPressed: () {
-                              _showEditTodoDialog(context, todo);
-                            },
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            label: const Text('Edit',
-                                style: TextStyle(color: Colors.blue)),
-                          ),
+                          if (!isOverdue)
+                            TextButton.icon(
+                              onPressed: () {
+                                _showEditTodoDialog(context, todo);
+                              },
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              label: const Text('Edit',
+                                  style: TextStyle(color: Colors.blue)),
+                            ),
                           const SizedBox(width: 16.0),
                           TextButton.icon(
                             onPressed: () {
-                              _todosService.deleteTodos(todo.id);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Delete Todo"),
+                                    content: Text(
+                                        "Are you sure you want to delete this todo?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _todosService.deleteTodos(todo.id);
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Delete"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             icon: const Icon(Icons.delete, color: Colors.red),
                             label: const Text('Delete',
@@ -335,89 +364,99 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Date:"),
-                    TextButton(
-                      onPressed: () async {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDate,
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2100),
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            selectedDate = picked;
-                          });
-                        }
-                      },
-                      child: Text(
-                        selectedDate.toLocal().toString().substring(0, 10),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return TextButton(
+                        onPressed: () async {
+                          final DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: selectedDate,
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2100),
+                          );
+                          if (picked != null) {
+                            setState(() {
+                              selectedDate = picked;
+                            });
+                          }
+                        },
+                        child: Text(
+                          selectedDate.toLocal().toString().substring(0, 10),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      );
+                    }),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Time:"),
-                    TextButton(
-                      onPressed: () async {
-                        final TimeOfDay? picked = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(selectedDate),
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            selectedDate = DateTime(
-                              selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                              picked.hour,
-                              picked.minute,
-                            );
-                          });
-                        }
-                      },
-                      child: Text(
-                        selectedDate.toLocal().toString().substring(10, 16),
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return TextButton(
+                        onPressed: () async {
+                          final TimeOfDay? picked = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(selectedDate),
+                          );
+                          if (picked != null) {
+                            setState(() {
+                              selectedDate = DateTime(
+                                selectedDate.year,
+                                selectedDate.month,
+                                selectedDate.day,
+                                picked.hour,
+                                picked.minute,
+                              );
+                            });
+                          }
+                        },
+                        child: Text(
+                          selectedDate.toLocal().toString().substring(10, 16),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      );
+                    }),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Priority:"),
-                    DropdownButton<String>(
-                      value: selectedPriority,
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            selectedPriority = newValue;
-                          });
-                        }
-                      },
-                      items: priorities
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                margin: const EdgeInsets.only(right: 8),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _getColorForPriority(value),
-                                ),
+                    StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return DropdownButton<String>(
+                          value: selectedPriority,
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              setState(() {
+                                selectedPriority = newValue;
+                              });
+                            }
+                          },
+                          items: priorities
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    margin: const EdgeInsets.only(right: 8),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: _getColorForPriority(value),
+                                    ),
+                                  ),
+                                  Text(value),
+                                ],
                               ),
-                              Text(value),
-                            ],
-                          ),
+                            );
+                          }).toList(),
                         );
-                      }).toList(),
+                      },
                     ),
                   ],
                 ),
