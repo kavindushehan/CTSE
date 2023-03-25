@@ -300,57 +300,63 @@ class _HomeState extends State<BudgetScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Date:"),
-                  TextButton(
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: selectedDate,
-                        firstDate: DateTime(
-                            selectedDate.year,
-                            selectedDate.month,
-                            selectedDate.day -
-                                1), // set firstDate to the day before the selectedDate
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null && picked != selectedDate) {
-                        setState(() {
-                          selectedDate = picked;
-                        });
-                      }
-                    },
-                    child: Text(
-                      "${selectedDate.toLocal().toString().substring(0, 10)}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
+                  StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                    return TextButton(
+                      onPressed: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day -
+                                  1), // set firstDate to the day before the selectedDate
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null && picked != selectedDate) {
+                          setState(() {
+                            selectedDate = picked;
+                          });
+                        }
+                      },
+                      child: Text(
+                        "${selectedDate.toLocal().toString().substring(0, 10)}",
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    );
+                  }),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("Time:"),
-                  TextButton(
-                    onPressed: () async {
-                      final TimeOfDay? picked = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.fromDateTime(selectedDate),
-                      );
-                      if (picked != null)
-                        setState(() {
-                          selectedDate = DateTime(
-                            selectedDate.year,
-                            selectedDate.month,
-                            selectedDate.day,
-                            picked.hour,
-                            picked.minute,
-                          );
-                        });
-                    },
-                    child: Text(
-                      "${selectedDate.toLocal().toString().substring(10, 16)}",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
+                  StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                    return TextButton(
+                      onPressed: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.fromDateTime(selectedDate),
+                        );
+                        if (picked != null)
+                          setState(() {
+                            selectedDate = DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              picked.hour,
+                              picked.minute,
+                            );
+                          });
+                      },
+                      child: Text(
+                        "${selectedDate.toLocal().toString().substring(10, 16)}",
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ],
