@@ -63,6 +63,7 @@ class _MyProfileState extends State<MyProfile> {
       //Set image
       if (auth.currentUser?.photoURL != null) {
         img = auth.currentUser?.photoURL;
+        newEmail = auth.currentUser?.email;
       }
       isLoading = false;
     });
