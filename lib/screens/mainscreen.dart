@@ -172,7 +172,11 @@ class _HomeState extends State<Home> {
               final todo = filteredTodos.length == 0
                   ? todos[index]
                   : filteredTodos[index];
-              final bool isOverdue = DateTime.now().isAfter(todo.dateTime);
+              final DateTime today = DateTime.now();
+              final DateTime todoDate = todo.dateTime;
+              final bool isOverdue =
+                  DateTime(today.year, today.month, today.day).isAfter(
+                      DateTime(todoDate.year, todoDate.month, todoDate.day));
               return Card(
                 elevation: 4.0,
                 shape: RoundedRectangleBorder(
@@ -271,7 +275,30 @@ class _HomeState extends State<Home> {
                           const SizedBox(width: 16.0),
                           TextButton.icon(
                             onPressed: () {
-                              _todosService.deleteTodos(todo.id);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Delete Todo"),
+                                    content: Text(
+                                        "Are you sure you want to delete this todo?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _todosService.deleteTodos(todo.id);
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Delete"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             icon: const Icon(Icons.delete, color: Colors.red),
                             label: const Text('Delete',
