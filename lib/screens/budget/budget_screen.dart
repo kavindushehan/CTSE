@@ -3,7 +3,6 @@ import 'package:ctse_app/screens/budget/add_budget.dart';
 import 'package:ctse_app/services/budgetService.dart';
 import 'package:ctse_app/widgets/sidemenu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class BudgetScreen extends StatefulWidget {
@@ -16,10 +15,8 @@ class BudgetScreen extends StatefulWidget {
 class _HomeState extends State<BudgetScreen> {
   final BudgetsService _budgetsService = BudgetsService();
   late TextEditingController _searchController;
-  List<Budgets> _budgets = [];
-  String _searchQuery = '';
   bool _isSearching = false;
-  bool _showCompleted = false;
+  bool _showCompleted = true;
   bool _showNonCompleted = true;
 
   @override
@@ -37,7 +34,7 @@ class _HomeState extends State<BudgetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: SideMenu(),
+      drawer: const SideMenu(),
       appBar: AppBar(
         title: _isSearching
             ? TextField(
@@ -46,6 +43,7 @@ class _HomeState extends State<BudgetScreen> {
                     hintText: "Search budgets...",
                     hintStyle: TextStyle(color: Colors.white),
                     border: InputBorder.none),
+                style: const TextStyle(color: Colors.white),
                 onChanged: (value) {
                   setState(() {});
                 },
@@ -65,7 +63,7 @@ class _HomeState extends State<BudgetScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               showDialog(
                 context: context,
@@ -95,7 +93,7 @@ class _HomeState extends State<BudgetScreen> {
               PopupMenuItem<String>(
                 value: 'all',
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.all_inclusive, color: Colors.blue),
                     SizedBox(width: 8),
                     Text('All'),
@@ -105,7 +103,7 @@ class _HomeState extends State<BudgetScreen> {
               PopupMenuItem<String>(
                 value: 'completed',
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.done_all, color: Colors.green),
                     SizedBox(width: 8),
                     Text('Completed'),
@@ -115,7 +113,7 @@ class _HomeState extends State<BudgetScreen> {
               PopupMenuItem<String>(
                 value: 'non_completed',
                 child: Row(
-                  children: [
+                  children: const [
                     Icon(Icons.list_alt, color: Colors.red),
                     SizedBox(width: 8),
                     Text('Non Completed'),
@@ -123,7 +121,7 @@ class _HomeState extends State<BudgetScreen> {
                 ),
               ),
             ],
-            icon: Icon(Icons.filter_alt, color: Colors.white),
+            icon: const Icon(Icons.filter_alt, color: Colors.white),
           )
         ],
       ),
@@ -131,7 +129,7 @@ class _HomeState extends State<BudgetScreen> {
         stream: _budgetsService.getBudgets(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -157,9 +155,16 @@ class _HomeState extends State<BudgetScreen> {
           }
 
           return ListView.builder(
-            itemCount: filteredBudgets.length,
+            // ignore: prefer_is_empty
+            itemCount: filteredBudgets.length == 0
+                ? budgets.length
+                : filteredBudgets.length,
             itemBuilder: (context, index) {
-              final budget = filteredBudgets[index];
+              // ignore: prefer_is_empty
+              final budget = filteredBudgets.length == 0
+                  ? budgets[index]
+                  : filteredBudgets[index];
+
               return Card(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +177,7 @@ class _HomeState extends State<BudgetScreen> {
                         children: [
                           Text(
                             budget.reason,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                             ),
@@ -200,7 +205,10 @@ class _HomeState extends State<BudgetScreen> {
                           ),
                           const SizedBox(width: 4.0),
                           Text(
-                            '${budget.dateTime.toLocal().toString().substring(0, 10)}',
+                            budget.dateTime
+                                .toLocal()
+                                .toString()
+                                .substring(0, 10),
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.grey[600],
@@ -214,7 +222,10 @@ class _HomeState extends State<BudgetScreen> {
                           ),
                           const SizedBox(width: 4.0),
                           Text(
-                            '${budget.dateTime.toLocal().toString().substring(10, 16)}',
+                            budget.dateTime
+                                .toLocal()
+                                .toString()
+                                .substring(10, 16),
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Colors.grey[600],
@@ -236,14 +247,14 @@ class _HomeState extends State<BudgetScreen> {
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                             color: Colors.blue,
                             onPressed: () {
                               _showEditBudgetDialog(context, budget);
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete),
+                            icon: const Icon(Icons.delete),
                             color: Colors.red,
                             onPressed: () {
                               _budgetsService.deleteBudgets(budget.id);
@@ -276,22 +287,22 @@ class _HomeState extends State<BudgetScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Edit Budget"),
+          title: const Text("Edit Budget"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: reasonController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Reason",
                 ),
               ),
               TextField(
                 controller: amountController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Amount",
                 ),
-                keyboardType: TextInputType.numberWithOptions(
+                keyboardType: const TextInputType.numberWithOptions(
                     decimal:
                         true), // set keyboard type to allow decimal numbers
               ),

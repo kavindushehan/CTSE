@@ -7,9 +7,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 class AddBudgetModel extends StatefulWidget {
   final Function(Budgets) onBudgetAdded;
 
-  const AddBudgetModel({required this.onBudgetAdded});
+  const AddBudgetModel({super.key, required this.onBudgetAdded});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddBudgetModalState createState() => _AddBudgetModalState();
 }
 
@@ -49,9 +50,10 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
     if (pickedDate != null) {
+      // ignore: use_build_context_synchronously
       final pickedTime = await showTimePicker(
         context: context,
         initialTime: _selectedTime,
@@ -69,19 +71,19 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Add Budget',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Form(
               key: _formKey,
               child: Column(
@@ -90,7 +92,7 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                 children: [
                   TextFormField(
                     controller: _reasonController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Reason',
                       border: OutlineInputBorder(),
                     ),
@@ -101,18 +103,18 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   InkWell(
                     onTap: () async {
                       await _showDateTimePicker();
                     },
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today),
+                        const Icon(Icons.calendar_today),
                         const SizedBox(width: 8.0),
                         Text(
                           '${_selectedDate.toLocal().toString().substring(0, 10)} ${_selectedTime.format(context)}',
-                          style: TextStyle(fontSize: 16.0),
+                          style: const TextStyle(fontSize: 16.0),
                         ),
                       ],
                     ),
@@ -122,13 +124,13 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                     children: [
                       IconButton(
                         onPressed: _decrementAmount,
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.remove),
                       ),
                       Expanded(
                         child: TextFormField(
                           controller: _amountController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Amount',
                             border: OutlineInputBorder(),
                           ),
@@ -147,16 +149,16 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                       ),
                       IconButton(
                         onPressed: _incrementAmount,
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Center(
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          String id = Uuid().v4();
+                          String id = const Uuid().v4();
                           String reason = _reasonController.text.trim();
                           String amount = _amountController.text.trim();
                           Budgets budget = Budgets(
@@ -171,6 +173,7 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                                 _selectedTime.minute),
                           );
                           await widget.onBudgetAdded(budget);
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         }
                         Fluttertoast.showToast(
@@ -183,7 +186,7 @@ class _AddBudgetModalState extends State<AddBudgetModel> {
                           fontSize: 16.0,
                         );
                       },
-                      child: Text('Save'),
+                      child: const Text('Save'),
                     ),
                   ),
                 ],
