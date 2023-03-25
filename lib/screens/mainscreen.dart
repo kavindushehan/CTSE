@@ -1,5 +1,6 @@
 import 'package:ctse_app/widgets/sidemenu.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../models/todo.dart';
 import '../services/todoService.dart';
 
@@ -292,6 +293,8 @@ class _HomeState extends State<Home> {
                                         onPressed: () {
                                           _todosService.deleteTodos(todo.id);
                                           Navigator.of(context).pop();
+                                          Fluttertoast.showToast(
+                                              msg: "Todo deleted successfully");
                                         },
                                         child: Text("Delete"),
                                       ),
@@ -478,6 +481,8 @@ class _HomeState extends State<Home> {
                         todo.priority = selectedPriority;
                         _todosService.updateTodos(todo);
                         Navigator.pop(context);
+                        Fluttertoast.showToast(
+                            msg: "Todo updated successfully");
                       },
                       child: const Text("Save", style: TextStyle(fontSize: 16)),
                     ),
